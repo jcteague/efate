@@ -1,0 +1,38 @@
+{
+  "name": "efate",
+  "version": "0.1.0",
+  "description": "javascript test fixture generator.  Autofixturejs 2.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -r ts-node/register src/**/*.tests.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcteague/efate.git"
+  },
+  "keywords": [
+    "testing",
+    "fixtures"
+  ],
+  "author": "John Teague",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jcteague/efate/issues"
+  },
+  "homepage": "https://github.com/jcteague/efate#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/sinon": "^5.0.1",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "sinon": "^6.1.5",
+    "sinon-chai": "^3.2.0",
+    "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "@types/sinon-chai": "^3.2.0",
+    "D": "^1.0.0",
+    "ts-node": "^7.0.0"
+  }
+}
