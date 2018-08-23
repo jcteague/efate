@@ -162,5 +162,14 @@ describe('fixture.specs', () => {
       expect(fixture.c).to.eql({d: 'd1', e:'e1'});
     });
   })
+  describe('name generators', ()=>{
+    const userGenerator = new Fixture(
+      'firstName'.asFirstName(),
+      'lastName'.asLastName(),
+      'fullNAME'.asFullName()
+      );
+    const user = userGenerator.create() as {firstName: string, lastName: string, fullName: string};
+    expect(user.firstName).to.be.a('string');
+  })
 
 });

@@ -13,5 +13,8 @@ declare global {
     fromFixture(fixture: Fixture): FieldBuilder;
     as(func: (increment: number) => any): FieldBuilder;
     pickFrom(options: Array): FieldBuilder;
+    asFirstName(): FieldBuilder;
+    asLastName(): FieldBuilder;
+    asFullName(): FieldBuilder;
   }
 }
