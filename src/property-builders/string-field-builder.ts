@@ -1,10 +1,7 @@
-import {FieldBuilder} from "../types";
+import {BuilderReturnFunction, FieldBuilder} from "../types";
 import Field from '../field';
 import {attachBuilderToStringProto} from '../utils'
 
-interface BuilderReturnFunction {
-  (this: string, increment: number): Field;
-}
 
 const withValueBuilder = function (this: string, valuePrefix: string): BuilderReturnFunction {
   const fieldName = this;
@@ -12,12 +9,11 @@ const withValueBuilder = function (this: string, valuePrefix: string): BuilderRe
 };
 const withConstantBuilder = function(this: string, valueConstant: any): BuilderReturnFunction {
   const fieldName = this;
-  console.log(fieldName);
   return () => new Field(fieldName, valueConstant);
 };
 
 attachBuilderToStringProto('withValue', withValueBuilder);
-attachBuilderToStringProto('withConstant', withConstantBuilder);
+attachBuilderToStringProto('asConstant', withConstantBuilder);
 
 // export const withValueBuilder;
 export default {

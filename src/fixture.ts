@@ -3,9 +3,24 @@ import PropertyBuilder from "./property-builders";
 import {FieldBuilder} from "./types";
 import {isObject, isFunction} from './utils';
 
+interface Override {
+  [key: string]: any;
+  func: (fixture: any) => void;
+}
+
+
 type OverrideObject = {[key: string]: any};
 type OverrideFunction = (fixture: any) => void;
-type OverrideParameter = OverrideObject|OverrideFunction;
+
+function applyOverrides(fixture: {}, overrides: {}) {
+  if (isFunction(overrides)) {
+    overrides(fixture);
+  } else {
+    Object.keys(overrides).forEach(k => {
+      fixture[k] = overrides[k];
+    })
+  }
+}
 export default class Fixture {
   private instanceCount: number;
   private builders: (string | FieldBuilder)[];
@@ -13,14 +28,13 @@ export default class Fixture {
     this.instanceCount = 1;
     this.builders = fields;
   }
-  create(overrides: OverrideParameter = {}){
+  create(overrides?: OverrideFunction);
+  create(overrides?: OverrideObject);
+  create(overrides = {}): any
+  {
     const fixture = {};
     this.builders.forEach(builder => {
       let {name, value} = PropertyBuilder.generateField(builder, this.instanceCount);
-
-      if (name in overrides) {
-        value = overrides[name];
-      }
       Object.defineProperty(fixture, name,
         {
           value: value,
@@ -28,10 +42,11 @@ export default class Fixture {
           writable: true
       });
 
-      if (typeof overrides === 'function') {
-        overrides(fixture);
-      }
+
+      applyOverrides(fixture, overrides);
+
     });
+    this.instanceCount++;
     return fixture;
   }
 
