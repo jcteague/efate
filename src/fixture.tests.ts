@@ -137,7 +137,6 @@ describe('fixture.specs', () => {
       expect(options).to.include(f.prop);
     });
     it('should throw an error if options are not provided', () => {
-      expect(() => new Fixture('prop'.pickFrom(null))).to.throw();
       expect(() => new Fixture('prop'.pickFrom([]))).to.throw();
     });
   });

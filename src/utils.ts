@@ -1,6 +1,6 @@
 // import Field from "./field";
 
-export const attachBuilderToStringProto = (name: string, value: () => void) => {
+export const attachBuilderToStringProto = (name: string, value: Function) => {
   Object.defineProperty(String.prototype, name, { value });
 };
 
