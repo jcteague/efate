@@ -1,13 +1,20 @@
-import Field from "../field";
-import {BuilderReturnFunction, FieldBuilder} from "../types";
-import {attachBuilderToStringProto} from "../utils";
-import {firstNames, lastNames} from "./names";
+import Field from '../field';
+import { BuilderReturnFunction, FieldBuilder } from '../types';
+import { attachBuilderToStringProto } from '../utils';
+import { firstNames, lastNames } from './names';
 
-const withValueBuilder = function(this: string, valuePrefix: string): BuilderReturnFunction {
+const withValueBuilder = function(
+  this: string,
+  valuePrefix: string
+): BuilderReturnFunction {
   const fieldName = this;
-  return (increment: number) => new Field(fieldName, `${valuePrefix}${increment}`);
+  return (increment: number) =>
+    new Field(fieldName, `${valuePrefix}${increment}`);
 };
-const withConstantBuilder = function(this: string, valueConstant: any): BuilderReturnFunction {
+const withConstantBuilder = function(
+  this: string,
+  valueConstant: any
+): BuilderReturnFunction {
   const fieldName = this;
   return () => new Field(fieldName, valueConstant);
 };
@@ -40,15 +47,15 @@ const fullNameBuilder = function(this: string): BuilderReturnFunction {
   };
 };
 
-attachBuilderToStringProto("withValue", withValueBuilder);
-attachBuilderToStringProto("asConstant", withConstantBuilder);
-attachBuilderToStringProto("asFirstName", firstNameBuilder);
-attachBuilderToStringProto("asLastName", lastNameBuilder);
-attachBuilderToStringProto("asFullName", fullNameBuilder);
+attachBuilderToStringProto('withValue', withValueBuilder);
+attachBuilderToStringProto('asConstant', withConstantBuilder);
+attachBuilderToStringProto('asFirstName', firstNameBuilder);
+attachBuilderToStringProto('asLastName', lastNameBuilder);
+attachBuilderToStringProto('asFullName', fullNameBuilder);
 
 // export const withValueBuilder;
 export default {
   buildFixtureProperty(name: string, increment: number): Field {
     return new Field(name, `${name}${increment}`);
-  },
+  }
 };

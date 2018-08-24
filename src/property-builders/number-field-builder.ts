@@ -1,6 +1,6 @@
-import Field from "../field";
-import {BuilderReturnFunction, DateBuilderOptions} from "../types";
-import {attachBuilderToStringProto} from "../utils";
+import Field from '../field';
+import { BuilderReturnFunction, DateBuilderOptions } from '../types';
+import { attachBuilderToStringProto } from '../utils';
 
 const asNumberBuilder = function(this: string): BuilderReturnFunction {
   const fieldName = this;
@@ -9,4 +9,4 @@ const asNumberBuilder = function(this: string): BuilderReturnFunction {
   };
 };
 
-attachBuilderToStringProto("asNumber", asNumberBuilder);
+attachBuilderToStringProto('asNumber', asNumberBuilder);

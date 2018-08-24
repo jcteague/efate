@@ -1,4 +1,4 @@
-import Field from "./field";
+import Field from './field';
 
 export interface FieldBuilder {
   buildFixtureProperty(increment: number);
@@ -6,12 +6,9 @@ export interface FieldBuilder {
 export interface DateBuilderOptions {
   incrementDay: boolean;
 }
-export interface BuilderReturnFunction {
-  (increment: number): Field;
-}
+export type BuilderReturnFunction = (increment: number) => Field;
+
 export interface LoremIpsumOptions {
-  minLength: number,
-  maxLength: number,
+  minLength: number;
+  maxLength: number;
 }
-
-

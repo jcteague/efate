@@ -1,6 +1,6 @@
 export default class Field {
-  name: string;
-  value: any;
+  public name: string;
+  public value: any;
 
   constructor(name: string, value: any) {
     this.name = name;

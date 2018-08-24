@@ -1,8 +1,11 @@
-import Field from "../field";
-import {BuilderReturnFunction, DateBuilderOptions} from "../types";
-import {attachBuilderToStringProto} from "../utils";
+import Field from '../field';
+import { BuilderReturnFunction, DateBuilderOptions } from '../types';
+import { attachBuilderToStringProto } from '../utils';
 
-const asArrayBuilder = function(this: string, length: number = 1): BuilderReturnFunction {
+const asArrayBuilder = function(
+  this: string,
+  length: number = 1
+): BuilderReturnFunction {
   const fieldName = this;
   const createArray = (prefix: string, len: number) => {
     const arr: string[] = [];
@@ -16,4 +19,4 @@ const asArrayBuilder = function(this: string, length: number = 1): BuilderReturn
   };
 };
 
-attachBuilderToStringProto("asArray", asArrayBuilder);
+attachBuilderToStringProto('asArray', asArrayBuilder);
