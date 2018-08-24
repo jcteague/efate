@@ -1,6 +1,6 @@
 import Fixture from "./fixture";
 export { };
-import {FieldBuilder, DateBuilderOptions, BuilderReturnFunction} from "./types";
+import {FieldBuilder, DateBuilderOptions, LoremIpsumOptions} from "./types";
 declare global {
   interface String {
     withValue(valuePrefix: string): FieldBuilder;
@@ -16,5 +16,6 @@ declare global {
     asFirstName(): FieldBuilder;
     asLastName(): FieldBuilder;
     asFullName(): FieldBuilder;
+    asLoremIpsum(options?: LoremIpsumOptions)
   }
 }

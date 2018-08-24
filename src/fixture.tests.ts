@@ -163,13 +163,30 @@ describe('fixture.specs', () => {
     });
   })
   describe('name generators', ()=>{
-    const userGenerator = new Fixture(
-      'firstName'.asFirstName(),
-      'lastName'.asLastName(),
-      'fullNAME'.asFullName()
+    it('should populate fields using the name generators', () => {
+      const userGenerator = new Fixture(
+        'firstName'.asFirstName(),
+        'lastName'.asLastName(),
+        'fullName'.asFullName()
       );
-    const user = userGenerator.create() as {firstName: string, lastName: string, fullName: string};
-    expect(user.firstName).to.be.a('string');
+      const user = userGenerator.create() as {firstName: string, lastName: string, fullName: string};
+      expect(user.firstName).to.be.a('string');
+      expect(user.lastName).to.be.a('string');
+      expect(user.fullName).to.be.a('string');
+    });
+  });
+  describe('asLoremIpsum()', () => {
+      it('should generate the lorem ipusm text', () =>{
+        const builder = new Fixture('lorem'.asLoremIpsum());
+        const f = builder.create() as {lorem: string};
+        expect(f.lorem.length > 10).to.be.true;
+      });
+      it('should make text longer than the min', () => {
+        const builder = new Fixture('lorem'.asLoremIpsum({minLength: 20, maxLength:50}));
+        const f = builder.create() as {lorem: string};
+        expect(f.lorem.length > 20).to.be.true;
+        expect(f.lorem.length < 50).to.be.true;
+      });
   })
 
 });

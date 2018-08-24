@@ -9,6 +9,9 @@ export interface DateBuilderOptions {
 export interface BuilderReturnFunction {
   (increment: number): Field;
 }
-
+export interface LoremIpsumOptions {
+  minLength: number,
+  maxLength: number,
+}
 
 
