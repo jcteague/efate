@@ -2,8 +2,8 @@
   "name": "efate",
   "version": "0.1.0",
   "description": "javascript test fixture generator.  Autofixturejs 2.0",
-  "main": "dist/src/fixture",
-  "types": "dist/srs/fixture.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc -p .",
