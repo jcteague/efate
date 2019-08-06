@@ -4,6 +4,9 @@
   "description": "javascript test fixture generator.  Autofixturejs 2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "scripts": {
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc -p .",
