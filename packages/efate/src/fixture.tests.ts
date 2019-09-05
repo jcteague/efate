@@ -47,6 +47,11 @@ describe('fixture.specs', () => {
       ) as User;
       expect(fixture.firstName).to.be.equal('Joey');
     });
+    it('should call create function once', () => {
+      const builderFn = sinon.spy();
+      const fixture = userFixture.create(builderFn);
+      expect(builderFn).to.be.calledOnce;
+    });
     it('can add new fields to the object through overrides', () => {
       const fixture = userFixture.create({ id: 1 }) as User;
       expect(fixture).to.have.property('id', 1);

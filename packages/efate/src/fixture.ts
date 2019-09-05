@@ -49,9 +49,8 @@ export default class Fixture {
         enumerable: true,
         writable: true
       });
-
-      applyOverrides(fixture, overrides);
     });
+    applyOverrides(fixture, overrides);
     this.instanceCount++;
     return fixture;
   }
