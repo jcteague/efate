@@ -1,0 +1,141 @@
+import {DocumentNode,
+  DefinitionNode,
+  Kind,
+  ObjectTypeDefinitionNode,
+  FieldDefinitionNode,
+  EnumTypeDefinitionNode,
+  NonNullTypeNode,
+  NamedTypeNode,
+  ListTypeNode,
+  TypeNode,
+} from 'graphql';
+import Fixture, {BuilderReturnFunction} from "efate";
+import {BuildFixtureOptions, FixtureDefinition, CustomScalarFieldBuilder} from "./types";
+import {scalarMap} from './scalar-fixture-map';
+import  * as debugFn from 'debug';
+const debug = debugFn('efate:graphql:build-fixture');
+
+const kindsToConvertToFixtures: string[] = [
+  Kind.OBJECT_TYPE_DEFINITION,
+  Kind.INPUT_OBJECT_TYPE_DEFINITION
+];
+
+
+const enumFilter = (def: DefinitionNode): boolean => def.kind === Kind.ENUM_TYPE_DEFINITION;
+
+const objectNodeFilter = (def: DefinitionNode): boolean => {
+  const isConvertibleToFixture = kindsToConvertToFixtures.includes(def.kind);
+  const objectDef = def as ObjectTypeDefinitionNode;
+  const notMutationOrQuery = objectDef.name.value !== 'Mutation' && objectDef.name.value !== 'Query';
+  return isConvertibleToFixture && notMutationOrQuery;
+};
+
+const isObjectType = (node: DefinitionNode ): node is ObjectTypeDefinitionNode =>
+  typeof (node as ObjectTypeDefinitionNode).fields !== 'undefined';
+
+const isNamedTypeNode = (node: TypeNode): node is NamedTypeNode  =>
+  typeof (node as NamedTypeNode).name !== 'undefined';
+
+const isNonNullTypeNode = (node: TypeNode): node is NonNullTypeNode  =>
+  typeof (node as NonNullTypeNode).type !== 'undefined';
+
+const getTypeNameFromTypeNode = (type: TypeNode): string | null =>{
+  let typeName: string | null = null;
+  if (type && isNonNullTypeNode(type)){
+    typeName = (type.type as NamedTypeNode).name.value;
+  } else if (type && isNamedTypeNode(type)) {
+    typeName = (type as NamedTypeNode).name.value;
+  }
+  return typeName;
+};
+
+const isFieldKnownScalar = (typeName: string): boolean => {
+   return typeName && scalarMap[typeName.toUpperCase()]
+};
+
+const isListTypeNode = (node: TypeNode): node is ListTypeNode =>
+  typeof (node as ListTypeNode).type !== 'undefined';
+
+class SchemaFixtureBuilder{
+  public fixtureDefs: FixtureDefinition[];
+  private enumDefinitions: EnumTypeDefinitionNode[];
+  private objectNodes: DefinitionNode[];
+  private customScalarBuilders: CustomScalarFieldBuilder[];
+
+
+  constructor(graphqlDocument: DocumentNode, options:BuildFixtureOptions){
+    this.customScalarBuilders = options.scalarBuilders || [];
+    this.enumDefinitions = graphqlDocument.definitions.filter(enumFilter) as EnumTypeDefinitionNode[];
+    this.objectNodes = graphqlDocument.definitions.filter(objectNodeFilter);
+    // console.log(this.objectNodes);
+    this.fixtureDefs = this.objectNodes.filter(isObjectType).map((x) => this.objectNodeToFixtureDef(x));
+  }
+
+  private objectNodeToFixtureDef(node: ObjectTypeDefinitionNode): FixtureDefinition {
+    const typeName = node.name.value;
+    const typeKind = node.kind;
+    debug(`--- ${typeName}`);
+
+    // @ts-ignore
+    const fieldBuilders: Array<string | FieldBuilder> = node.fields.map((f) => this.mapFieldsToFieldBuilder(f));
+    return {
+      typeName,
+      typeKind,
+      fixture: new Fixture(...fieldBuilders),
+    }
+
+  }
+  private isEnumeratedField(field: FieldDefinitionNode): boolean {
+    const typeName = getTypeNameFromTypeNode(field.type);
+    if (!typeName) { return false; }
+    const enumDef = this.enumDefinitions.find(e => e.name.value === typeName);
+    return typeof enumDef !== 'undefined';
+
+  }
+  private isCustomScalarProvided(typeName: string): boolean {
+    const customBuilders = this.customScalarBuilders.find(s => s.typeName === typeName);
+    return typeof customBuilders !== 'undefined';
+  }
+  private mapFieldsToFieldBuilder(field: FieldDefinitionNode): BuilderReturnFunction {
+    // console.log(field);
+    const name = field.name.value;
+    const typeName = getTypeNameFromTypeNode(field.type);
+    debug('--- ---field name: %s, kind: %s, type: %s', name, field.type.kind, typeName);
+
+    const customScalar = this.customScalarBuilders.find(s => s.typeName === typeName);
+    debug('custom scalar %o', customScalar);
+    if(typeName && typeof customScalar !== 'undefined'){
+      const customBuilder = customScalar.fieldBuilder;
+      const boundBuilder = customBuilder.bind(name);
+      debug('using custom scalar for %s: %o', typeName, boundBuilder);
+      return boundBuilder();
+    }
+    if(typeName && isFieldKnownScalar(typeName)){
+      debug(`--- --- ${name}: ${typeName}`);
+      const builder = scalarMap[typeName.toUpperCase()].bind(name);
+      debug('scalar builder: %o', scalarMap[typeName.toUpperCase()]);
+      return builder();
+    }
+
+    if(typeName && this.isEnumeratedField(field)){
+      debug('--- --- enumerated field: %o', field);
+      const enumDef = this.enumDefinitions.find(e => e.name.value === typeName);
+      if(typeof enumDef !== 'undefined' && typeof enumDef.values !== 'undefined'){
+        debug('enum: %o', enumDef);
+        const values =  enumDef.values.map(d => d.name.value);
+        debug('enum values: %o', values);
+        const builder = name.pickFrom(values);
+        debug(builder);
+        return builder;
+      }
+      throw new Error(`Could not create type from enumerated type: ${typeName}`);
+
+    }
+    throw new Error(`Field Not Supported: ${name}: ${typeName}`);
+  }
+}
+
+export function buildFixtures(graphqlDocument: DocumentNode, options: BuildFixtureOptions): FixtureDefinition[]{
+  const fixtureBuilder = new SchemaFixtureBuilder(graphqlDocument, options);
+  return fixtureBuilder.fixtureDefs;
+}

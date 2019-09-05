@@ -1,0 +1,11 @@
+import Field from '../field';
+import { BuilderReturnFunction } from '../types';
+declare const asStringBuilder: (this: string) => BuilderReturnFunction;
+declare const withValueBuilder: (this: string, valuePrefix: string) => BuilderReturnFunction;
+declare const withConstantBuilder: (this: string, valueConstant: any) => BuilderReturnFunction;
+declare const firstNameBuilder: (this: string) => BuilderReturnFunction;
+declare const lastNameBuilder: (this: string) => BuilderReturnFunction;
+declare const fullNameBuilder: (this: string) => BuilderReturnFunction;
+declare const _default: (name: string, increment: number) => Field;
+export default _default;
+export { withValueBuilder, withConstantBuilder, firstNameBuilder, lastNameBuilder, fullNameBuilder, asStringBuilder };
