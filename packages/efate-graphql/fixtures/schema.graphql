@@ -14,7 +14,7 @@ type User implements Node{
 
 type Post  implements Node {
     id: ID!
-#    createdBy: User!
+    createdBy: User!
     createdDate: DateTime!
     status: PostStatus
     requiredStatus: PostStatus!

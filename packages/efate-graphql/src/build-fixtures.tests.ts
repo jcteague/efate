@@ -40,6 +40,12 @@ describe.only('buildFixtures',  () =>{
       const fixture = postFixture.fixture.create();
       expect(fixture).to.have.property('createdDate');
       expect(fixture.createdDate).to.be.an.instanceof(Date);
+    });
+    it('should add types from other fixtures', function () {
+      const fixtures = buildFixtures(document, buildOptions);
+      const postFixture = fixtures.find(f => f.typeName === 'Post') as FixtureDefinition;
+      const fixture = postFixture.fixture.create();
+      expect(fixture).to.have.property('createdBy');
     })
 
 })
