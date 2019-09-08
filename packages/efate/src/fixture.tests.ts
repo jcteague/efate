@@ -8,6 +8,7 @@ chai.use(sinonChai);
 
 import Fixture from './fixture';
 import { SinonStub } from 'sinon';
+import {propertyBuilders} from "./index";
 interface User {
   id?: number;
   firstName: string;
@@ -122,10 +123,17 @@ describe('fixture.specs', () => {
       expect(f.roles).to.eql(['roles1']);
     });
     it('should create an array with the specified length', () => {
-      const builder = new Fixture('roles'.asArray(3));
+      const builder = new Fixture('roles'.asArray({length:3}));
       const f = builder.create() as { roles: string[] };
       expect(f.roles).to.have.lengthOf(3);
     });
+    it('should create an array of the specified type', () => {
+        const builder = new Fixture(
+          'roles'.asArray({length: 3, builder: propertyBuilders.asNumberBuilder})
+        );
+        const f = builder.create() as { roles: any[] };
+        expect(f.roles).to.eql([1, 2, 3]);
+    })
   });
   describe('as()', () => {
     it('should create field using the function passed to it', () => {

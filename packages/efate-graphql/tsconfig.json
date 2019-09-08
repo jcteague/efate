@@ -6,5 +6,6 @@
     "outDir": "./dist",
     "noImplicitAny": false,
     "strict": true,
+    "preserveSymlinks": false
   }
 }

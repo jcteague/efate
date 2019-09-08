@@ -22,7 +22,7 @@ type Post  implements Node {
     title: String
     description: String
     content:String
-#    comments: [Comment!]
+    comments: [Comment!]
 }
 type Comment implements Node {
     id: ID!
@@ -32,7 +32,7 @@ type Comment implements Node {
 }
 input CreatePostInput {
     userId: ID!
-#    createdDate: DateTime!
+    createdDate: DateTime!
     title: String
     description: String
     content: String

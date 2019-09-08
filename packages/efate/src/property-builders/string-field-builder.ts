@@ -7,7 +7,7 @@ const debug = debugFn('efate:string-field-builder');
 const asStringBuilder = function(this: string): BuilderReturnFunction {
   const fieldName = this;
   debug('string builder field = %s', fieldName);
-  return (increment: number): Field => new Field(fieldName, `${fieldName}${increment}`);
+  return (increment: number): Field => new Field(fieldName, `${fieldName}${increment}`)
 };
 
 const withValueBuilder = function(

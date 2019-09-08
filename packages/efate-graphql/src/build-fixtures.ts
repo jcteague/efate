@@ -40,7 +40,11 @@ const isNonNullTypeNode = (node: TypeNode): node is NonNullTypeNode  =>
   typeof (node as NonNullTypeNode).type !== 'undefined';
 
 const getTypeNameFromTypeNode = (type: TypeNode): string | null =>{
+  debug('--- --- type: %o', type)
   let typeName: string | null = null;
+  if (type.kind === 'ListType') {
+    type = type.type;
+  }
   if (type && isNonNullTypeNode(type)){
     typeName = (type.type as NamedTypeNode).name.value;
   } else if (type && isNamedTypeNode(type)) {
@@ -57,18 +61,22 @@ const isListTypeNode = (node: TypeNode): node is ListTypeNode =>
   typeof (node as ListTypeNode).type !== 'undefined';
 
 class SchemaFixtureBuilder{
-  public fixtureDefs: FixtureDefinition[];
+  public fixtureDefs: FixtureDefinition[] = [];
   private enumDefinitions: EnumTypeDefinitionNode[];
-  private objectNodes: DefinitionNode[];
+  private objectNodes: ObjectTypeDefinitionNode[];
   private customScalarBuilders: CustomScalarFieldBuilder[];
 
 
   constructor(graphqlDocument: DocumentNode, options:BuildFixtureOptions){
     this.customScalarBuilders = options.scalarBuilders || [];
     this.enumDefinitions = graphqlDocument.definitions.filter(enumFilter) as EnumTypeDefinitionNode[];
-    this.objectNodes = graphqlDocument.definitions.filter(objectNodeFilter);
+    this.objectNodes = graphqlDocument.definitions.filter(objectNodeFilter) as ObjectTypeDefinitionNode[];
     // console.log(this.objectNodes);
-    this.fixtureDefs = this.objectNodes.filter(isObjectType).map((x) => this.objectNodeToFixtureDef(x));
+    this.objectNodes.forEach(schemaObj => {
+      if(isObjectType(schemaObj)){
+        this.fixtureDefs.push(this.objectNodeToFixtureDef(schemaObj));
+      }
+    });
   }
 
   private objectNodeToFixtureDef(node: ObjectTypeDefinitionNode): FixtureDefinition {
@@ -78,11 +86,13 @@ class SchemaFixtureBuilder{
 
     // @ts-ignore
     const fieldBuilders: Array<string | FieldBuilder> = node.fields.map((f) => this.mapFieldsToFieldBuilder(f));
-    return {
+    const fixtureDef =  {
       typeName,
       typeKind,
       fixture: new Fixture(...fieldBuilders),
-    }
+    };
+    debug('created fixture def: %o', fixtureDef);
+    return fixtureDef;
 
   }
   private isEnumeratedField(field: FieldDefinitionNode): boolean {
@@ -96,24 +106,33 @@ class SchemaFixtureBuilder{
     const customBuilders = this.customScalarBuilders.find(s => s.typeName === typeName);
     return typeof customBuilders !== 'undefined';
   }
+  private isSchemaObjectType(typeName: string): boolean {
+    return this.objectNodes.find(n => n.name.value === typeName) !== null;
+  }
+
   private mapFieldsToFieldBuilder(field: FieldDefinitionNode): BuilderReturnFunction {
     // console.log(field);
     const name = field.name.value;
     const typeName = getTypeNameFromTypeNode(field.type);
-    debug('--- ---field name: %s, kind: %s, type: %s', name, field.type.kind, typeName);
+    debug('--- --- field name: %s, kind: %s, type: %s', name, field.type.kind, typeName);
+
+    if(field.kind === 'ListType'){
+
+    }
 
     const customScalar = this.customScalarBuilders.find(s => s.typeName === typeName);
-    debug('custom scalar %o', customScalar);
     if(typeName && typeof customScalar !== 'undefined'){
+      debug('--- --- custom scalar');
       const customBuilder = customScalar.fieldBuilder;
       const boundBuilder = customBuilder.bind(name);
-      debug('using custom scalar for %s: %o', typeName, boundBuilder);
+      debug('--- --- using custom scalar for %s: %o', typeName, boundBuilder);
       return boundBuilder();
     }
+
     if(typeName && isFieldKnownScalar(typeName)){
       debug(`--- --- ${name}: ${typeName}`);
       const builder = scalarMap[typeName.toUpperCase()].bind(name);
-      debug('scalar builder: %o', scalarMap[typeName.toUpperCase()]);
+      debug('--- --- scalar builder: %o', scalarMap[typeName.toUpperCase()]);
       return builder();
     }
 
@@ -125,11 +144,22 @@ class SchemaFixtureBuilder{
         const values =  enumDef.values.map(d => d.name.value);
         debug('enum values: %o', values);
         const builder = name.pickFrom(values);
-        debug(builder);
+        debug('enum builder: %o', builder);
         return builder;
       }
       throw new Error(`Could not create type from enumerated type: ${typeName}`);
-
+    }
+    if(typeName && this.isSchemaObjectType(typeName)){
+      debug('--- --- building from fixture');
+      debug('--- --- fixturedefs %O', this.fixtureDefs);
+      const fixtureDef = this.fixtureDefs.find(def => def.typeName === typeName);
+      debug('--- --- creating from fixture: %o', fixtureDef);
+      if (typeof fixtureDef !== 'undefined'){
+        const fixture = fixtureDef.fixture as Fixture;
+        const builder =  name.fromFixture(fixture);
+        debug(builder);
+        return builder;
+      }
     }
     throw new Error(`Field Not Supported: ${name}: ${typeName}`);
   }

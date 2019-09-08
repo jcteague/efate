@@ -1,5 +1,5 @@
 import Field from '../field';
-import Fixture from '../fixture';
+import Fixture from '../index';
 import { BuilderReturnFunction, DateBuilderOptions } from '../types';
 import { attachBuilderToStringProto } from '../utils';
 

@@ -1,6 +1,6 @@
-import Fixture from './fixture';
+import Fixture from './index';
 export {};
-import { BuilderReturnFunction, DateBuilderOptions, LoremIpsumOptions } from './types';
+import { BuilderReturnFunction, ArrayBuilderOptions, DateBuilderOptions, LoremIpsumOptions } from './types';
 declare global {
   interface String {
     withValue(valuePrefix: string): BuilderReturnFunction;
@@ -9,8 +9,8 @@ declare global {
     asNumber(): BuilderReturnFunction;
     asBoolean(): BuilderReturnFunction;
     asEmail(): BuilderReturnFunction;
-    asArray(length?: number): BuilderReturnFunction;
-    fromFixture(fixture: Fixture): BuilderReturnFunction;
+    asArray(options?: ArrayBuilderOptions): BuilderReturnFunction;
+    fromFixture(fixture: any): BuilderReturnFunction;
     as(func: (increment: number) => any): BuilderReturnFunction;
     pickFrom(options: any[]): BuilderReturnFunction;
     asFirstName(): BuilderReturnFunction;

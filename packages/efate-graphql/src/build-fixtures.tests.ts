@@ -46,6 +46,25 @@ describe.only('buildFixtures',  () =>{
       const postFixture = fixtures.find(f => f.typeName === 'Post') as FixtureDefinition;
       const fixture = postFixture.fixture.create();
       expect(fixture).to.have.property('createdBy');
+      expect(fixture.createdBy).to.have.property('id');
+      expect(fixture.createdBy).to.have.property('firstName');
+      expect(fixture.createdBy).to.have.property('lastName');
+
+      expect(fixture).to.have.property('comments');
+    });
+    it.only('should create list types', function () {
+      const schema = `
+      type Post {
+        counts: [Int]
+        names: [String!]
+    }`;
+      const postDocument = parse(schema);
+      const fixtures = buildFixtures(postDocument, buildOptions);
+      const postFixture = fixtures.find(f => f.typeName === 'Post') as FixtureDefinition;
+      const fixture = postFixture.fixture.create();
+      expect(fixture).to.have.property('counts');
+      expect(fixture).to.have.property('names');
     })
+
 
 })
