@@ -42,9 +42,9 @@ const isNonNullTypeNode = (node: TypeNode): node is NonNullTypeNode  =>
 const getTypeNameFromTypeNode = (type: TypeNode): string | null =>{
   debug('--- --- type: %o', type)
   let typeName: string | null = null;
-  if (type.kind === 'ListType') {
-    type = type.type;
-  }
+  // if (type.kind === 'ListType') {
+  //   type = type.type;
+  // }
   if (type && isNonNullTypeNode(type)){
     typeName = (type.type as NamedTypeNode).name.value;
   } else if (type && isNamedTypeNode(type)) {
@@ -95,8 +95,8 @@ class SchemaFixtureBuilder{
     return fixtureDef;
 
   }
-  private isEnumeratedField(field: FieldDefinitionNode): boolean {
-    const typeName = getTypeNameFromTypeNode(field.type);
+  private isEnumeratedField(type: TypeNode): boolean {
+    const typeName = getTypeNameFromTypeNode(type);
     if (!typeName) { return false; }
     const enumDef = this.enumDefinitions.find(e => e.name.value === typeName);
     return typeof enumDef !== 'undefined';
@@ -110,41 +110,40 @@ class SchemaFixtureBuilder{
     return this.objectNodes.find(n => n.name.value === typeName) !== null;
   }
 
-  private mapFieldsToFieldBuilder(field: FieldDefinitionNode): BuilderReturnFunction {
+  private mapFieldsToFieldBuilder(fieldName: string, fieldKind, string: type: TypeNode): BuilderReturnFunction {
     // console.log(field);
-    const name = field.name.value;
-    const typeName = getTypeNameFromTypeNode(field.type);
-    debug('--- --- field name: %s, kind: %s, type: %s', name, field.type.kind, typeName);
+    const typeName = getTypeNameFromTypeNode(type);
+    debug('--- --- field name: %s, kind: %s, type: %s', fieldName, kind, typeName);
 
-    if(field.kind === 'ListType'){
-
-    }
+    // if(field.kind === 'ListType'){
+    //   const builder = this.mapFieldsToFieldBuilder(field);
+    //
+    // }
 
     const customScalar = this.customScalarBuilders.find(s => s.typeName === typeName);
     if(typeName && typeof customScalar !== 'undefined'){
       debug('--- --- custom scalar');
       const customBuilder = customScalar.fieldBuilder;
-      const boundBuilder = customBuilder.bind(name);
+      const boundBuilder = customBuilder.bind(fieldName);
       debug('--- --- using custom scalar for %s: %o', typeName, boundBuilder);
       return boundBuilder();
     }
 
     if(typeName && isFieldKnownScalar(typeName)){
-      debug(`--- --- ${name}: ${typeName}`);
-      const builder = scalarMap[typeName.toUpperCase()].bind(name);
+      debug(`--- --- ${fieldName}: ${typeName}`);
+      const builder = scalarMap[typeName.toUpperCase()].bind(fieldName);
       debug('--- --- scalar builder: %o', scalarMap[typeName.toUpperCase()]);
       return builder();
     }
 
-    if(typeName && this.isEnumeratedField(field)){
-      debug('--- --- enumerated field: %o', field);
+    if(typeName && this.isEnumeratedField(type)){
+      debug('--- --- enumerated field: %o', fieldName);
       const enumDef = this.enumDefinitions.find(e => e.name.value === typeName);
       if(typeof enumDef !== 'undefined' && typeof enumDef.values !== 'undefined'){
         debug('enum: %o', enumDef);
         const values =  enumDef.values.map(d => d.name.value);
-        debug('enum values: %o', values);
-        const builder = name.pickFrom(values);
-        debug('enum builder: %o', builder);
+        debug('--- --- enum values: %o', values);
+        const builder = fieldName.pickFrom(values);
         return builder;
       }
       throw new Error(`Could not create type from enumerated type: ${typeName}`);
@@ -156,12 +155,12 @@ class SchemaFixtureBuilder{
       debug('--- --- creating from fixture: %o', fixtureDef);
       if (typeof fixtureDef !== 'undefined'){
         const fixture = fixtureDef.fixture as Fixture;
-        const builder =  name.fromFixture(fixture);
+        const builder =  fieldName.fromFixture(fixture);
         debug(builder);
         return builder;
       }
     }
-    throw new Error(`Field Not Supported: ${name}: ${typeName}`);
+    throw new Error(`Field Not Supported: ${fieldName}: ${typeName}`);
   }
 }
 

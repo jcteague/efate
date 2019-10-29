@@ -55,6 +55,7 @@ describe.only('buildFixtures',  () =>{
     it.only('should create list types', function () {
       const schema = `
       type Post {
+        name: String
         counts: [Int]
         names: [String!]
     }`;
