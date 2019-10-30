@@ -1,7 +1,14 @@
 import Field from '../field';
-import { BuilderReturnFunction, FieldBuilder } from '../types';
+import { BuilderReturnFunction } from '../types';
 import { attachBuilderToStringProto } from '../utils';
 import { firstNames, lastNames } from './names';
+import * as debugFn from 'debug';
+const debug = debugFn('efate:string-field-builder');
+const asStringBuilder = function(this: string): BuilderReturnFunction {
+  const fieldName = this;
+  debug('string builder field = %s', fieldName);
+  return (increment: number): Field => new Field(fieldName, `${fieldName}${increment}`)
+};
 
 const withValueBuilder = function(
   this: string,
@@ -54,8 +61,15 @@ attachBuilderToStringProto('asLastName', lastNameBuilder);
 attachBuilderToStringProto('asFullName', fullNameBuilder);
 
 // export const withValueBuilder;
-export default {
-  buildFixtureProperty(name: string, increment: number): Field {
+export default (name: string, increment: number): Field =>{
     return new Field(name, `${name}${increment}`);
-  }
-};
+  };
+
+export {
+  withValueBuilder,
+  withConstantBuilder,
+  firstNameBuilder,
+  lastNameBuilder,
+  fullNameBuilder,
+  asStringBuilder
+}

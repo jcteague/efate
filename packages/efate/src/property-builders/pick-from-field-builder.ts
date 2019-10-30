@@ -19,3 +19,4 @@ const pickFromBuilder = function(
 };
 
 attachBuilderToStringProto('pickFrom', pickFromBuilder);
+export default pickFromBuilder;

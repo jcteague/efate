@@ -19,3 +19,4 @@ const asDateBuilder = function(
 };
 
 attachBuilderToStringProto('asDate', asDateBuilder);
+export default asDateBuilder;

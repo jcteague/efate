@@ -13,3 +13,4 @@ const buildFromFunction = function(
 };
 
 attachBuilderToStringProto('as', buildFromFunction);
+export default buildFromFunction;

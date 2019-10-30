@@ -25,3 +25,4 @@ const loremIpsumBuilder = function(
 };
 
 attachBuilderToStringProto('asLoremIpsum', loremIpsumBuilder);
+export default loremIpsumBuilder;

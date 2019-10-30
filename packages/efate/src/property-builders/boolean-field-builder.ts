@@ -1,6 +1,7 @@
 import Field from '../field';
 import { BuilderReturnFunction, DateBuilderOptions } from '../types';
 import { attachBuilderToStringProto } from '../utils';
+import asArrayBuilder from "./array-field-builder";
 
 const asBooleanBuilder = function(this: string): BuilderReturnFunction {
   const fieldName = this;
@@ -10,3 +11,4 @@ const asBooleanBuilder = function(this: string): BuilderReturnFunction {
 };
 
 attachBuilderToStringProto('asBoolean', asBooleanBuilder);
+export default asBooleanBuilder;

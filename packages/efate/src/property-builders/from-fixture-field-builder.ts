@@ -1,5 +1,5 @@
 import Field from '../field';
-import Fixture from '../fixture';
+import Fixture from '../index';
 import { BuilderReturnFunction, DateBuilderOptions } from '../types';
 import { attachBuilderToStringProto } from '../utils';
 
@@ -14,3 +14,4 @@ const fromFixtureBuilder = function(
 };
 
 attachBuilderToStringProto('fromFixture', fromFixtureBuilder);
+export default fromFixtureBuilder;

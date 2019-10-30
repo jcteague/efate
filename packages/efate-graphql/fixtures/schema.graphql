@@ -1,0 +1,46 @@
+scalar DateTime
+enum PostStatus {
+    NOT_PUBLISHED,
+    PUBLISHED
+}
+interface Node {
+    id: ID!
+}
+type User implements Node{
+    id: ID!,
+    firstName: String
+    lastName: String
+}
+
+type Post  implements Node {
+    id: ID!
+    createdBy: User!
+    createdDate: DateTime!
+    status: PostStatus
+    requiredStatus: PostStatus!
+    likes: Int,
+    title: String
+    description: String
+    content:String
+    comments: [Comment!]
+}
+type Comment implements Node {
+    id: ID!
+    likes: Int
+    name: String
+    content: String!
+}
+input CreatePostInput {
+    userId: ID!
+    createdDate: DateTime!
+    title: String
+    description: String
+    content: String
+
+}
+type Query {
+    getPost(id: ID): Post
+}
+type Mutation {
+    createPost(input: CreatePostInput): Post
+}

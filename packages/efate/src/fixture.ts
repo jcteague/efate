@@ -1,9 +1,10 @@
 // tslint:disable-next-line
 /// <reference path="./global.d.ts" />
 import PropertyBuilder from './property-builders';
-import { FieldBuilder } from './types';
+import { BuilderReturnFunction } from './types';
 import { isObject, isFunction } from './utils';
-
+import * as debugGenerator from 'debug';
+const debug = debugGenerator('efate:fixture');
 interface Override {
   [key: string]: any;
   func: (fixture: any) => void;
@@ -25,8 +26,10 @@ function applyOverrides(fixture: {}, overrides: {}) {
 }
 export default class Fixture {
   private instanceCount: number;
-  private builders: Array<string | FieldBuilder>;
-  constructor(...fields: Array<string | FieldBuilder>) {
+  private builders: Array<string | BuilderReturnFunction>;
+  constructor(...fields: Array<string | BuilderReturnFunction>) {
+    debug('provided fields %o', fields);
+
     this.instanceCount = 1;
     this.builders = fields;
   }
@@ -35,12 +38,14 @@ export default class Fixture {
   public create(overrides = {}): any {
     const fixture = {};
     this.builders.forEach(builder => {
-      const { name, value } = PropertyBuilder.generateField(
+      debug('builder: %o', builder);
+      const field = PropertyBuilder.generateField(
         builder,
         this.instanceCount
       );
-      Object.defineProperty(fixture, name, {
-        value,
+      debug('generated field %o', field);
+      Object.defineProperty(fixture, field.name, {
+        value: field.value,
         enumerable: true,
         writable: true
       });

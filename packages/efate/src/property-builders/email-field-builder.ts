@@ -2,11 +2,12 @@ import Field from '../field';
 import { BuilderReturnFunction, DateBuilderOptions } from '../types';
 import { attachBuilderToStringProto } from '../utils';
 
-const asNumberBuilder = function(this: string): BuilderReturnFunction {
+const asEmailbuilder = function(this: string): BuilderReturnFunction {
   const fieldName = this;
   return (increment: number) => {
-    return new Field(fieldName, increment);
+    return new Field(fieldName, `email${increment}@example.com`);
   };
 };
 
-attachBuilderToStringProto('asNumber', asNumberBuilder);
+attachBuilderToStringProto('asEmail', asEmailbuilder);
+export default asEmailbuilder;
