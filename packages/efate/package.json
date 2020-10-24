@@ -9,7 +9,6 @@
     "compile": "npm run clean && tsc -p .",
     "clean": "rm -rf dist",
     "precommit": "lint-staged",
-
     "test": "nyc --extension .ts mocha -r ts-node/register -r source-map-support/register src/**/*.tests.ts",
     "lint": "tslint ./src/**/*.ts",
     "prettier": "prettier  --parser typescript --single-quote",
