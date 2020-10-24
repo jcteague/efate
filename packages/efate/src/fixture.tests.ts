@@ -8,7 +8,7 @@ chai.use(sinonChai);
 
 import Fixture from './fixture';
 import { SinonStub } from 'sinon';
-import {propertyBuilders} from "./index";
+import { propertyBuilders } from './index';
 interface User {
   id?: number;
   firstName: string;
@@ -123,17 +123,20 @@ describe('fixture.specs', () => {
       expect(f.roles).to.eql(['roles1']);
     });
     it('should create an array with the specified length', () => {
-      const builder = new Fixture('roles'.asArray({length:3}));
+      const builder = new Fixture('roles'.asArray({ length: 3 }));
       const f = builder.create() as { roles: string[] };
       expect(f.roles).to.have.lengthOf(3);
     });
     it('should create an array of the specified type', () => {
-        const builder = new Fixture(
-          'roles'.asArray({length: 3, builder: propertyBuilders.asNumberBuilder})
-        );
-        const f = builder.create() as { roles: any[] };
-        expect(f.roles).to.eql([1, 2, 3]);
-    })
+      const builder = new Fixture(
+        'roles'.asArray({
+          length: 3,
+          builder: propertyBuilders.asNumberBuilder
+        })
+      );
+      const f = builder.create() as { roles: any[] };
+      expect(f.roles).to.eql([1, 2, 3]);
+    });
   });
   describe('as()', () => {
     it('should create field using the function passed to it', () => {
@@ -167,6 +170,17 @@ describe('fixture.specs', () => {
       const fixture = outerBuilder.create({ c: { d: 'd1', e: 'e1' } });
       expect(fixture).to.have.property('c');
       expect(fixture.c).to.eql({ d: 'd1', e: 'e1' });
+    });
+  });
+  describe('arrayOfFixture()', () => {
+    it('creates an array of fixtures', () => {
+      const innerFixture = new Fixture('a', 'b');
+      const outerFixture = new Fixture('c'.arrayOfFixture(innerFixture));
+      const fixture = outerFixture.create();
+
+      expect(fixture.c).to.be.an('array');
+      expect(fixture.c).to.have.lengthOf(3);
+      expect(fixture.c[0]).to.have.property('a');
     });
   });
   describe('name generators', () => {

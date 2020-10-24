@@ -1,12 +1,19 @@
 import Field from '../field';
-import {ArrayBuilderOptions, BuilderReturnFunction, DateBuilderOptions} from '../types';
+import {
+  ArrayBuilderOptions,
+  BuilderReturnFunction,
+  DateBuilderOptions
+} from '../types';
 import { attachBuilderToStringProto } from '../utils';
-import {propertyBuilders} from "../index";
+import { propertyBuilders } from '../index';
 import * as _debug from 'debug';
 const debug = _debug('efate:array-builder');
 const asArrayBuilder = function(
   this: string,
-  {length = 1, builder = propertyBuilders.asStringBuilder}: ArrayBuilderOptions = {}
+  {
+    length = 1,
+    builder = propertyBuilders.asStringBuilder
+  }: ArrayBuilderOptions = {}
 ): BuilderReturnFunction {
   const fieldName = this;
   const createArray = () => {

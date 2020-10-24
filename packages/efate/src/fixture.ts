@@ -39,10 +39,7 @@ export default class Fixture {
     const fixture = {};
     this.builders.forEach(builder => {
       debug('builder: %o', builder);
-      const field = PropertyBuilder.generateField(
-        builder,
-        this.instanceCount
-      );
+      const field = PropertyBuilder.generateField(builder, this.instanceCount);
       debug('generated field %o', field);
       Object.defineProperty(fixture, field.name, {
         value: field.value,

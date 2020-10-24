@@ -1,5 +1,5 @@
 import Field from '../field';
-import {BuilderReturnFunction} from '../types';
+import { BuilderReturnFunction } from '../types';
 import { isFunction, isString } from '../utils';
 import './array-field-builder';
 import './boolean-field-builder';
@@ -10,12 +10,16 @@ import './function-field-builder';
 import './lorem-ipsum-field-builder';
 import './number-field-builder';
 import './pick-from-field-builder';
+import './array-of-fixture-builder';
 import stringBuilder from './string-field-builder';
 import * as debugFn from 'debug';
 const debug = debugFn('efate:property-builder');
 
 export interface FieldFixtureGenerator {
-  generateField(builder: string | BuilderReturnFunction, instanceCounter: number): Field;
+  generateField(
+    builder: string | BuilderReturnFunction,
+    instanceCounter: number
+  ): Field;
 }
 
 export default {
@@ -24,7 +28,7 @@ export default {
     instanceCounter: number
   ): Field {
     if (isString(builder)) {
-      return stringBuilder(builder, instanceCounter)
+      return stringBuilder(builder, instanceCounter);
     }
     if (isFunction(builder)) {
       return builder(instanceCounter);
