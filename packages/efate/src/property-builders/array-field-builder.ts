@@ -8,6 +8,7 @@ import { attachBuilderToStringProto } from '../utils';
 import { propertyBuilders } from '../index';
 import * as _debug from 'debug';
 const debug = _debug('efate:array-builder');
+
 const asArrayBuilder = function(
   this: string,
   {

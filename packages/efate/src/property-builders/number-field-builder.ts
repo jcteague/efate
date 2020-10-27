@@ -1,13 +1,9 @@
 import Field from '../field';
 import { BuilderReturnFunction, DateBuilderOptions } from '../types';
-import { attachBuilderToStringProto } from '../utils';
+import { createBuilder } from '../utils';
 
-const asNumberBuilder = function(this: string): BuilderReturnFunction {
-  const fieldName = this;
-  return (increment: number) => {
-    return new Field(fieldName, increment);
-  };
-};
+const asNumberBuilder = createBuilder<number>(
+  'asNumber',
+  (increment: number) => increment)
 
-attachBuilderToStringProto('asNumber', asNumberBuilder);
 export default asNumberBuilder;
