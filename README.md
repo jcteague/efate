@@ -121,6 +121,7 @@ const asCustomDomainEmailbuilder = function(domainName = 'example.com'): Builder
 };
 ```
 **It's very important that you use the function statement and not a lambda expression**  If you use a lambda, the `this` field will not be attached to the string object.
+
 Once you've defined your builder, you attach it to the String prototype with the name of the function 
 you want to use when define the fixture.
 
