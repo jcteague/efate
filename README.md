@@ -115,11 +115,12 @@ the value at the time of creation.  This function returns the [Field](/packages/
 ```javascript
 const asCustomDomainEmailbuilder = function(domainName = 'example.com'): BuilderReturnFunction {
   const fieldName = this; // since we're attached to the String protoType, the field name is the this object. 
-  return (increment) => {
+  return function (increment){
     return new Field(fieldName, `email${increment}@example.com`);
   };
 };
 ```
+**It's very important that you use the function statement and not a lambda expression**  If you use a lambda, the `this` field will not be attached to the string object.
 Once you've defined your builder, you attach it to the String prototype with the name of the function 
 you want to use when define the fixture.
 
