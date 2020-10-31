@@ -2,7 +2,7 @@
 A Test Fixture Builder
 ![Image of Efate](https://www.shoreexcursionsgroup.com/img/tour/SPPVEFATE-2.jpg)
 
-Efate of the next version of [autofixture.js](https://github.com/jcteague/autofixturejs).  There were 
+Efate is the next version of [autofixture.js](https://github.com/jcteague/autofixturejs).  There were 
 so many changes to make that a rewrite was in order.  It has the same basic usage, plus:
 * Has a modular design to make it more intuitive to use (no more string matching to find the right builder)
 * Extensible.  You can add your own type builders
