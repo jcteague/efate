@@ -1,6 +1,6 @@
 {
   "name": "efate-uuid",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "efate generator for uuid",
   "main": "dist/index.js",
   "types": "dist/types.d.ts",
