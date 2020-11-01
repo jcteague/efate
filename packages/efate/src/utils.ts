@@ -2,6 +2,9 @@
 import {BuilderReturnFunction} from "./types";
 import Field from "./field";
 
+export function createBuilderWithParams<TParam>(functionName: string, params: TParam) {
+  return createBuilder()
+}
 export function createBuilder<T> (functionName: string, builderFn: (increment: number) => T)
 :() => BuilderReturnFunction
   {

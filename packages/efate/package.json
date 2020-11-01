@@ -35,7 +35,7 @@
   "bugs": {
     "url": "https://github.com/jcteague/efate/issues"
   },
-  "homepage": "https://github.com/jcteague/efate#readme",
+  "homepage": "https://github.com/jcteague/efate#efate",
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",
