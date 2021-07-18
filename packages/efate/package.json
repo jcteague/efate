@@ -56,8 +56,10 @@
     "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.0.1"
   },
+  
   "dependencies": {
     "debug": "^4.1.1"
   },
-  "gitHead": "ad59bf288eae568ed7ec93aaf1c8cfbb11fbce35"
+  "files": ["lib/**/*"]
+  
 }
