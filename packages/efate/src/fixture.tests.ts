@@ -18,7 +18,7 @@ interface User {
 }
 
 describe('fixture.specs', () => {
-  const userFixture = new Fixture('firstName', 'lastName', 'date'.asDate());
+  const userFixture = new Fixture<User>('firstName', 'lastName', 'date'.asDate());
   let buildStub: SinonStub;
 
   it('should call the builders for all fixture fields', () => {
@@ -95,7 +95,7 @@ describe('fixture.specs', () => {
     });
   });
   describe('asNumber()', () => {
-    const fb = new Fixture('id'.asNumber());
+    const fb = new Fixture<{id: number}>('id'.asNumber());
     const f1 = fb.create();
     const f2 = fb.create();
     expect(f1.id).to.equal(1);
@@ -117,7 +117,7 @@ describe('fixture.specs', () => {
   });
   describe('asArray', () => {
     it('should create an array field on the fixture', () => {
-      const builder = new Fixture('roles'.asArray());
+      const builder = new Fixture<{roles: []}>('roles'.asArray());
       const f = builder.create() as { roles: any[] };
       expect(f.roles).to.be.an('array');
       expect(f.roles).to.eql(['roles1']);
@@ -138,6 +138,7 @@ describe('fixture.specs', () => {
       expect(f.roles).to.eql([1, 2, 3]);
     });
   });
+
   describe('as()', () => {
     it('should create field using the function passed to it', () => {
       const builder = new Fixture('field'.as(inc => `field${inc}`));
@@ -145,6 +146,7 @@ describe('fixture.specs', () => {
       expect(f.field).to.be.equal('field1');
     });
   });
+
   describe('pickFrom', () => {
     it('should pick from one of the provided values to populate the field', () => {
       const options = ['a', 'b', 'c', 'd'];

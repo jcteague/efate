@@ -24,7 +24,7 @@ function applyOverrides(fixture: {}, overrides: {}) {
     });
   }
 }
-export default class Fixture {
+export default class Fixture<T = any> {
   private instanceCount: number;
   private builders: Array<string | BuilderReturnFunction>;
   constructor(...fields: Array<string | BuilderReturnFunction>) {
@@ -33,10 +33,9 @@ export default class Fixture {
     this.instanceCount = 1;
     this.builders = fields;
   }
-  public create(overrides?: OverrideFunction);
-  public create(overrides?: OverrideObject); // tslint:disable-line
-  public create(overrides = {}): any {
-    const fixture = {};
+
+  public create(overrides: Partial<T> | OverrideFunction = {}): T {
+    const fixture = {} as T;
     this.builders.forEach(builder => {
       debug('builder: %o', builder);
       const field = PropertyBuilder.generateField(builder, this.instanceCount);

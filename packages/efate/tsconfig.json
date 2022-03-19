@@ -5,6 +5,8 @@
     "declaration": true,
     "outDir": "./dist",
     "noImplicitAny": false,
-    "strict": true
-  }
+    "strict": true,
+    
+  },
+  "include": ["src/global.d.ts"]
 }
