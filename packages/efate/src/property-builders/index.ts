@@ -16,15 +16,15 @@ import * as debugFn from 'debug';
 const debug = debugFn('efate:property-builder');
 
 export interface FieldFixtureGenerator {
-  generateField(
-    builder: string | BuilderReturnFunction,
+  generateField<T>(
+    builder: (keyof T) | BuilderReturnFunction,
     instanceCounter: number
   ): Field;
 }
 
 export default {
-  generateField(
-    builder: string | BuilderReturnFunction,
+  generateField<T>(
+    builder: (keyof T)| BuilderReturnFunction,
     instanceCounter: number
   ): Field {
     if (isString(builder)) {

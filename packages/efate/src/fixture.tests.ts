@@ -9,16 +9,32 @@ chai.use(sinonChai);
 import Fixture from './fixture';
 import { SinonStub } from 'sinon';
 import { propertyBuilders } from './index';
+interface Account {
+  userName: string;
+  passWord: string
+}
 interface User {
   id?: number;
   firstName: string;
   lastName: string;
   email: string;
   date: Date;
+  roles: string[],
+  account: Account
 }
 
+
 describe('fixture.specs', () => {
-  const userFixture = new Fixture<User>('firstName', 'lastName', 'date'.asDate());
+  const accountFixture = new Fixture<Account>('userName', 'passWord');
+  const userFixture = new Fixture<User>(
+    'id'.asNumber(),
+    'firstName',
+    'lastName',
+    'date'.asDate(),
+    'account'.fromFixture(accountFixture),
+    'roles'.asArray()
+  );
+
   let buildStub: SinonStub;
 
   it('should call the builders for all fixture fields', () => {
@@ -26,7 +42,7 @@ describe('fixture.specs', () => {
       .stub(PropertyBuilder, 'generateField')
       .returns({ name: 'prop', value: 'value' });
     const fixture = userFixture.create();
-    expect(buildStub).to.be.callCount(3);
+    expect(buildStub).to.be.callCount(6);
     buildStub.restore();
   });
 
@@ -34,6 +50,10 @@ describe('fixture.specs', () => {
     const fixture = userFixture.create();
     expect(fixture).to.have.property('firstName', 'firstName2');
     expect(fixture).to.have.property('lastName', 'lastName2');
+    expect(fixture).to.have.property('date');
+    expect(fixture).to.have.property('account');
+    expect(fixture).to.have.property('roles');
+    expect(fixture.roles).to.eql(['roles1'])
   });
 
   describe('overrides', () => {
@@ -53,11 +73,26 @@ describe('fixture.specs', () => {
       const fixture = userFixture.create(builderFn);
       expect(builderFn).to.be.calledOnce;
     });
-    it('can add new fields to the object through overrides', () => {
-      const fixture = userFixture.create({ id: 1 }) as User;
-      expect(fixture).to.have.property('id', 1);
-      const f2 = userFixture.create(user => (user.id = 1));
-      expect(f2).to.have.property('id', 1);
+    // not possible after typing the create function
+
+    // it('can add new fields to the object through overrides', () => {
+    //   const fixture = userFixture.create({ x: 1 }) as User;
+    //   expect(fixture).to.have.property('id', 1);
+    //   const f2 = userFixture.create(user => (user.id = 1));
+    //   expect(f2).to.have.property('id', 1);
+    // });
+    it('can override nested objects',  () => {
+      const date = new Date(2022,0,1,1,0,0)
+      const fixture = userFixture.create({
+        firstName: 'bob',
+        date,
+        account:{userName: 'user name overridden'} as Account});
+      expect(fixture.id).to.exist;
+      expect(fixture.date).to.equal(date);
+      expect(fixture.account).to.exist;
+      expect(fixture.account.passWord).to.contain('passWord');
+      expect(fixture.account.userName).to.equal('user name overridden')
+
     });
   });
 
@@ -167,11 +202,11 @@ describe('fixture.specs', () => {
       expect(fixture.c).to.eql({ a: 'a1', b: 'b1' });
     });
     it('uses overrides from the provided fixture', () => {
-      const innerBuilder = new Fixture('a', 'b');
-      const outerBuilder = new Fixture('c'.fromFixture(innerBuilder));
-      const fixture = outerBuilder.create({ c: { d: 'd1', e: 'e1' } });
+      const innerBuilder = new Fixture<{a:string, b:string}>('a', 'b');
+      const outerBuilder = new Fixture<{c:{a:string, b:string}}>('c'.fromFixture(innerBuilder));
+      const fixture = outerBuilder.create({ c: { a: 'd1', b: 'e1' } });
       expect(fixture).to.have.property('c');
-      expect(fixture.c).to.eql({ d: 'd1', e: 'e1' });
+      expect(fixture.c).to.eql({ a: 'd1', b: 'e1' });
     });
   });
   describe('arrayOfFixture()', () => {
