@@ -1,22 +1,15 @@
 import Field from '../field';
-import { BuilderReturnFunction, DateBuilderOptions } from '../types';
-import { attachBuilderToStringProto } from '../utils';
 
-const pickFromBuilder = function(
-  this: string,
-  options: any[]
-): BuilderReturnFunction {
-  if (!options || options.length === 0) {
-    throw new Error('options to pick values from not provided');
-  }
-  const fieldName = this;
-  return () => {
-    return new Field(
-      fieldName,
-      options[Math.floor(Math.random() * options.length)]
-    );
-  };
-};
+const pickFromBuilder = (fieldName: string, options: any[]) =>
+    (increment: number) =>{
+      if(!options || options.length === 0){
+        throw new Error('missing or empty options array')
+      }
+      console.log('*** pick from builder ***')
+      console.log(options)
+      return new Field(fieldName, options[Math.floor(Math.random() * options.length)]);
+    }
 
-attachBuilderToStringProto('pickFrom', pickFromBuilder);
+
+
 export default pickFromBuilder;

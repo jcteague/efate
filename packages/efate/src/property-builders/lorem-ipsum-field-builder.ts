@@ -14,15 +14,7 @@ const generateText = ({ minLength, maxLength }: LoremIpsumOptions): string => {
   return loremIpsumText.substr(startPosition, length);
 };
 
-const loremIpsumBuilder = function(
-  this: string,
-  options: LoremIpsumOptions = defaultOptions
-): BuilderReturnFunction {
-  const fieldName = this;
-  return () => {
-    return new Field(fieldName, generateText(options));
-  };
-};
-
-attachBuilderToStringProto('asLoremIpsum', loremIpsumBuilder);
+const loremIpsumBuilder = (fieldName: string, options: LoremIpsumOptions = defaultOptions) =>
+    (increment: number) =>
+      new Field(fieldName, generateText(options));
 export default loremIpsumBuilder;

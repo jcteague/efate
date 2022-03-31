@@ -1,14 +1,15 @@
 /* tslint:disable: no-unused-expression */
 import * as chai from 'chai';
 const expect = chai.expect;
-import PropertyBuilder from './property-builders';
+import {fieldBuilders} from './property-builders';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 chai.use(sinonChai);
 
-import Fixture from './fixture';
+import Fixture, {BuilderReturnFunction} from './';
 import { SinonStub } from 'sinon';
 import { propertyBuilders } from './index';
+import {ArrayBuilderOptions, DateBuilderOptions, LoremIpsumOptions} from "./types";
 interface Account {
   userName: string;
   passWord: string
@@ -23,33 +24,41 @@ interface User {
   account: Account
 }
 
-
 describe('fixture.specs', () => {
-  const accountFixture = new Fixture<Account>('userName', 'passWord');
-  const userFixture = new Fixture<User>(
-    'id'.asNumber(),
-    'firstName',
-    'lastName',
-    'date'.asDate(),
-    'account'.fromFixture(accountFixture),
-    'roles'.asArray()
-  );
-
-  let buildStub: SinonStub;
-
-  it('should call the builders for all fixture fields', () => {
-    buildStub = sinon
-      .stub(PropertyBuilder, 'generateField')
-      .returns({ name: 'prop', value: 'value' });
-    const fixture = userFixture.create();
-    expect(buildStub).to.be.callCount(6);
-    buildStub.restore();
+  const accountFixture = new Fixture<Account>((a) =>{
+    a.userName.asString();
+    a.passWord.asString();
   });
+
+
+
+
+
+
+  const userFixture = new Fixture<User>((f) =>{
+    f.id?.asNumber();
+    f.firstName.asString();
+    f.lastName.asString();
+    f.date.asDate();
+    f.account.fromFixture(accountFixture);
+    f.roles.asArray();
+  });
+
+  // let buildStub: SinonStub;
+
+  // it('should call the builders for all fixture fields', () => {
+  //   buildStub = sinon
+  //     .stub(PropertyBuilder, 'generateField')
+  //     .returns({ name: 'prop', value: 'value' });
+  //   const fixture = userFixture.create();
+  //   expect(buildStub).to.be.callCount(6);
+  //   buildStub.restore();
+  // });
 
   it('should add string properties to the fixture', () => {
     const fixture = userFixture.create();
-    expect(fixture).to.have.property('firstName', 'firstName2');
-    expect(fixture).to.have.property('lastName', 'lastName2');
+    expect(fixture).to.have.property('firstName', 'firstName1');
+    expect(fixture).to.have.property('lastName', 'lastName1');
     expect(fixture).to.have.property('date');
     expect(fixture).to.have.property('account');
     expect(fixture).to.have.property('roles');
@@ -98,8 +107,7 @@ describe('fixture.specs', () => {
 
   describe('withValues()', () => {
     it('increments the specified value for the field value', () => {
-      const fixture = new Fixture(
-        'email'.withValue('userEmail')
+      const fixture = new Fixture<User>((t) =>t.email.withValue('userEmail')
       ).create() as User;
       expect(fixture.email).to.equal('userEmail1');
     });
@@ -107,7 +115,7 @@ describe('fixture.specs', () => {
 
   describe('asConstant()', () => {
     it('should create fields using a constant value that does not change between instances', () => {
-      const builder = new Fixture('firstName'.asConstant('Bob'));
+      const builder = new Fixture<User>(t => t.firstName.asConstant('Bob'));
       const fixture1 = builder.create() as User;
       const fixture2 = builder.create() as User;
       expect(fixture1).to.have.property('firstName', 'Bob');
@@ -116,21 +124,21 @@ describe('fixture.specs', () => {
   });
   describe('asDate()', () => {
     it('should return a date for the property', () => {
-      const fixture = userFixture.create() as User;
+      const fixture = userFixture.create();
       expect(fixture).to.have.property('date');
       expect(fixture.date).to.be.an.instanceof(Date);
     });
     it('should increment the date instances when specified', () => {
       const today = new Date();
-      const builder = new Fixture('date'.asDate({ incrementDay: true }));
-      const f1 = builder.create() as { date: Date };
-      const f2 = builder.create() as { date: Date };
+      const builder = new Fixture<{date: Date}>(t => t.date.asDate({ incrementDay: true }));
+      const f1 = builder.create();
+      const f2 = builder.create();
       expect(f1.date.getDate()).to.be.equal(today.getDate());
       expect(f2.date.getDate()).to.be.equal(today.getDate() + 1);
     });
   });
   describe('asNumber()', () => {
-    const fb = new Fixture<{id: number}>('id'.asNumber());
+    const fb = new Fixture<{id: number}>(t => t.id.asNumber());
     const f1 = fb.create();
     const f2 = fb.create();
     expect(f1.id).to.equal(1);
@@ -138,37 +146,34 @@ describe('fixture.specs', () => {
   });
   describe('asBoolean()', () => {
     it('should create a boolean field', () => {
-      const fb = new Fixture('flag'.asBoolean());
-      const f = fb.create() as { flag: boolean };
+      const fb = new Fixture<{flag: boolean}>(t => t.flag.asBoolean());
+      const f = fb.create();
       expect(f.flag).be.a('boolean');
     });
   });
   describe('asEmail()', () => {
     it('should populate field with an email address', () => {
-      const fb = new Fixture('email'.asEmail());
+      const fb = new Fixture<{email: string}>(t => t.email.asEmail());
       const f = fb.create();
       expect(f.email).to.equal('email1@example.com');
     });
   });
   describe('asArray', () => {
     it('should create an array field on the fixture', () => {
-      const builder = new Fixture<{roles: []}>('roles'.asArray());
-      const f = builder.create() as { roles: any[] };
+      const builder = new Fixture<{roles: []}>(t => t.roles.asArray());
+      const f = builder.create();
       expect(f.roles).to.be.an('array');
       expect(f.roles).to.eql(['roles1']);
     });
     it('should create an array with the specified length', () => {
-      const builder = new Fixture('roles'.asArray({ length: 3 }));
+      const builder = new Fixture<{roles: []}>(t => t.roles.asArray({length: 3}));
       const f = builder.create() as { roles: string[] };
       expect(f.roles).to.have.lengthOf(3);
     });
     it('should create an array of the specified type', () => {
-      const builder = new Fixture(
-        'roles'.asArray({
-          length: 3,
-          builder: propertyBuilders.asNumberBuilder
-        })
-      );
+      const builder = new Fixture<{roles: []}>(t =>
+        t.roles.asArray({length: 3, builder: () => propertyBuilders.asNumberBuilder}));
+
       const f = builder.create() as { roles: any[] };
       expect(f.roles).to.eql([1, 2, 3]);
     });
@@ -176,7 +181,7 @@ describe('fixture.specs', () => {
 
   describe('as()', () => {
     it('should create field using the function passed to it', () => {
-      const builder = new Fixture('field'.as(inc => `field${inc}`));
+      const builder = new Fixture<{field: string}>(t => t.field.as(inc => `field${inc}`));
       const f = builder.create() as { field: string };
       expect(f.field).to.be.equal('field1');
     });
@@ -185,25 +190,35 @@ describe('fixture.specs', () => {
   describe('pickFrom', () => {
     it('should pick from one of the provided values to populate the field', () => {
       const options = ['a', 'b', 'c', 'd'];
-      const builder = new Fixture('prop'.pickFrom(options));
-      const f = builder.create() as { prop: string };
+      const builder = new Fixture<{prop:string}>(t => t.prop.pickFrom(options));
+      const f = builder.create();
+      console.log({f});
       expect(options).to.include(f.prop);
     });
     it('should throw an error if options are not provided', () => {
-      expect(() => new Fixture('prop'.pickFrom([]))).to.throw();
+      const f = new Fixture<{prop:string}>(t => t.prop.pickFrom([]))
+      expect(() => f.create()).to.throw();
     });
   });
   describe('fromFixture()', () => {
     it('creates a property based on the fixture', () => {
-      const innerBuilder = new Fixture('a', 'b');
-      const outerBuilder = new Fixture('c'.fromFixture(innerBuilder));
+      interface InnerObj {a: string, b: string};
+      const innerBuilder = new Fixture<InnerObj>(t => {
+        t.a.asString();
+        t.b.asString();
+      });
+      const outerBuilder = new Fixture<{c: InnerObj}>(t => t.c.fromFixture(innerBuilder))
       const fixture = outerBuilder.create();
       expect(fixture).to.have.property('c');
       expect(fixture.c).to.eql({ a: 'a1', b: 'b1' });
     });
     it('uses overrides from the provided fixture', () => {
-      const innerBuilder = new Fixture<{a:string, b:string}>('a', 'b');
-      const outerBuilder = new Fixture<{c:{a:string, b:string}}>('c'.fromFixture(innerBuilder));
+      interface InnerObj {a: string, b: string};
+      const innerBuilder = new Fixture<InnerObj>(t => {
+        t.a.asString();
+        t.b.asString();
+      });
+      const outerBuilder = new Fixture<{c:InnerObj}>(t => t.c.fromFixture(innerBuilder));
       const fixture = outerBuilder.create({ c: { a: 'd1', b: 'e1' } });
       expect(fixture).to.have.property('c');
       expect(fixture.c).to.eql({ a: 'd1', b: 'e1' });
@@ -211,9 +226,15 @@ describe('fixture.specs', () => {
   });
   describe('arrayOfFixture()', () => {
     it('creates an array of fixtures', () => {
-      const innerFixture = new Fixture('a', 'b');
-      const outerFixture = new Fixture('c'.arrayOfFixture(innerFixture));
+      interface InnerObj {a: string, b: string};
+      const innerFixture = new Fixture<InnerObj>(t => {
+        t.a.asString();
+        t.b.asString();
+      });
+      const outerFixture = new Fixture<{c:InnerObj}>(t =>
+        t.c.arrayOfFixture({fixture: innerFixture}));
       const fixture = outerFixture.create();
+      console.log(fixture);
 
       expect(fixture.c).to.be.an('array');
       expect(fixture.c).to.have.lengthOf(3);
@@ -222,16 +243,13 @@ describe('fixture.specs', () => {
   });
   describe('name generators', () => {
     it('should populate fields using the name generators', () => {
-      const userGenerator = new Fixture(
-        'firstName'.asFirstName(),
-        'lastName'.asLastName(),
-        'fullName'.asFullName()
-      );
-      const user = userGenerator.create() as {
-        firstName: string;
-        lastName: string;
-        fullName: string;
-      };
+      interface Names {firstName: string, lastName: string, fullName: string};
+      const userGenerator = new Fixture<Names>(t => {
+        t.firstName.firstName();
+        t.lastName.lastName();
+        t.fullName.fullName();
+      })
+      const user = userGenerator.create()
       expect(user.firstName).to.be.a('string');
       expect(user.lastName).to.be.a('string');
       expect(user.fullName).to.be.a('string');
@@ -239,14 +257,12 @@ describe('fixture.specs', () => {
   });
   describe('asLoremIpsum()', () => {
     it('should generate the lorem ipusm text', () => {
-      const builder = new Fixture('lorem'.asLoremIpsum());
+      const builder = new Fixture<{lorem: string}>(t => t.lorem.asLoremIpsum());
       const f = builder.create() as { lorem: string };
       expect(f.lorem.length > 10).to.be.true;
     });
     it('should make text longer than the min', () => {
-      const builder = new Fixture(
-        'lorem'.asLoremIpsum({ minLength: 20, maxLength: 50 })
-      );
+      const builder = new Fixture<{lorem: string}>(t => t.lorem.asLoremIpsum({minLength: 20, maxLength: 50}));
       const f = builder.create() as { lorem: string };
       expect(f.lorem.length > 20).to.be.true;
       expect(f.lorem.length < 50).to.be.true;

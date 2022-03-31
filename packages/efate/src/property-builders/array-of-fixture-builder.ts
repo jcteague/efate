@@ -2,17 +2,15 @@ import Field from '../field';
 import Fixture from '../index';
 import { BuilderReturnFunction } from '../types';
 import { attachBuilderToStringProto } from '../utils';
+export interface ArrayOfFixtureBuilderOptions<T> {
+  fixture: Fixture<T>;
+  count?: number;
+}
+const arrayOfFixtureBuilder = <T>(fieldName: string, {fixture, count}:ArrayOfFixtureBuilderOptions<T>) =>
+  (increment: number) => {
+    const arrayCount = count ?? 3;
+    const mocks = [...new Array(arrayCount).keys()].map(() => fixture.create());
+    return new Field(fieldName,mocks);
+  }
 
-const arrayOfFixtureBuilder = function(
-  this: string,
-  fixture: Fixture,
-  count: number = 3
-): BuilderReturnFunction {
-  const fieldName = this;
-  const createArray = () =>
-    [...new Array(count).keys()].map(() => fixture.create());
-  return () => new Field(fieldName, createArray());
-};
-
-attachBuilderToStringProto('arrayOfFixture', arrayOfFixtureBuilder);
 export default arrayOfFixtureBuilder;

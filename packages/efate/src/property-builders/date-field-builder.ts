@@ -1,22 +1,20 @@
 import Field from '../field';
-import { BuilderReturnFunction, DateBuilderOptions } from '../types';
-import { attachBuilderToStringProto } from '../utils';
+import { DateBuilderOptions } from '../types';
+
+
 const defaultOptions = {
   incrementDay: false
 } as DateBuilderOptions;
-const asDateBuilder = function(
-  this: string,
-  options: DateBuilderOptions = defaultOptions
-): BuilderReturnFunction {
-  const fieldName = this;
-  return (increment: number) => {
-    const date = new Date();
-    if (options.incrementDay) {
-      date.setDate(date.getDate() + (increment - 1));
-    }
-    return new Field(fieldName, date);
-  };
-};
 
-attachBuilderToStringProto('asDate', asDateBuilder);
+const asDateBuilder = (fieldName: string, options: DateBuilderOptions = defaultOptions) =>
+    (increment: number) =>{
+      const date = new Date();
+      if (options.incrementDay) {
+        date.setDate(date.getDate() + (increment - 1));
+      }
+      return new Field(fieldName, date);
+    }
+
+
+
 export default asDateBuilder;
