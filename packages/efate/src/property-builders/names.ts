@@ -48,7 +48,7 @@ export const firstNames = [
   'Marvin',
   'Kingston',
   'Scott',
-  'Bailey'
+  'Bailey',
 ];
 
 export const lastNames = [
@@ -101,5 +101,5 @@ export const lastNames = [
   'Snyder',
   'Torres',
   'Potter',
-  'Hoffman'
+  'Hoffman',
 ];
