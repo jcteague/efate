@@ -1,9 +1,6 @@
 import Field from '../field';
-import { BuilderReturnFunction, DateBuilderOptions } from '../types';
-import { createBuilder } from '../utils';
 
-const asNumberBuilder = createBuilder<number>(
-  'asNumber',
-  (increment: number) => increment)
+const asNumberBuilder = (fieldName: string) => (increment: number) =>
+  new Field(fieldName, increment);
 
 export default asNumberBuilder;
