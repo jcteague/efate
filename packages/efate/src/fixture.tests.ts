@@ -17,7 +17,7 @@ interface Account {
 interface User {
   id?: number;
   firstName: string;
-  lastName: strins;
+  lastName: string;
   email: string;
   date: Date;
   roles: string[];
