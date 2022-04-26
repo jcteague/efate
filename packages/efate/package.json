@@ -1,6 +1,6 @@
 {
   "name": "efate",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.0+efb910c",
   "description": "javascript test fixture generator.  Autofixturejs 2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -63,5 +63,5 @@
   "files": [
     "dist/**/*"
   ],
-  "gitHead": "4424ce35b8aab0909f52e11b140fb56aab86e7fe"
+  "gitHead": "efb910c750e2f0d779a271b73081de66eb6a888d"
 }

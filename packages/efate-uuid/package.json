@@ -1,6 +1,6 @@
 {
   "name": "efate-uuid",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.0+efb910c",
   "description": "efate generator for uuid",
   "main": "dist/index.js",
   "types": "dist/types.d.ts",
@@ -55,9 +55,12 @@
     "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.0.1"
   },
+  "peerDependencies": {
+    "efate": "^1.0.0-alpha.0"
+  },
   "dependencies": {
-    "efate": "^1.0.0-alpha.0",
+
     "uuid": "^3.3.3"
   },
-  "gitHead": "4424ce35b8aab0909f52e11b140fb56aab86e7fe"
+  "gitHead": "efb910c750e2f0d779a271b73081de66eb6a888d"
 }

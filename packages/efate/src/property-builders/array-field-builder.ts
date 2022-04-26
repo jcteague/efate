@@ -6,7 +6,7 @@ const debug = _debug('efate:array-builder');
 
 export interface ArrayBuilderOptions {
   length?: number;
-  builder?: (property: string, ...args: any[]) => <T>(...args: any[]) => BuilderReturnFunction<T>;
+  builder?: (fieldName: string, ...args: any[]) => <T>(...args: any[]) => BuilderReturnFunction<T>;
 }
 
 const defaultOptions: ArrayBuilderOptions = {
@@ -15,7 +15,7 @@ const defaultOptions: ArrayBuilderOptions = {
 };
 
 const asArrayBuilder =
-  (fieldName: string, options?: ArrayBuilderOptions) => (increment: number) => {
+  (fieldName: string, [options]: [ArrayBuilderOptions]) => (increment: number) => {
     const length = options?.length ?? defaultOptions.length;
     const builder = options?.builder ?? defaultOptions.builder;
     const arr: any[] = [];
