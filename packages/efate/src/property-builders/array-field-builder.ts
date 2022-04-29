@@ -1,6 +1,6 @@
 import Field from '../field';
-import { BuilderReturnFunction, DateBuilderOptions } from '../types';
-import { propertyBuilders } from '../index';
+import { BuilderReturnFunction } from '../types';
+import {fieldBuilders} from './index';
 import * as _debug from 'debug';
 const debug = _debug('efate:array-builder');
 
@@ -21,7 +21,7 @@ const asArrayBuilder =
     const arr: any[] = [];
     // const fieldBuilder = builder!();
     for (let i = 1; i < length! + 1; i++) {
-      const value = propertyBuilders.asStringBuilder(fieldName)(i).value;
+      const value = fieldBuilders.asStringBuilder(fieldName)(i).value;
       arr.push(value);
     }
     return new Field(fieldName, arr);

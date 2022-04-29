@@ -11,8 +11,6 @@ import asNumberBuilder from './number-field-builder';
 import pickFromBuilder from './pick-from-field-builder';
 import arrayOfFixtureBuilder from './array-of-fixture-builder';
 import { asStringBuilder } from './string-field-builder';
-import * as debugFn from 'debug';
-const debug = debugFn('efate:property-builder');
 
 const fieldBuilders = {
   asArrayBuilder,

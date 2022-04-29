@@ -1,6 +1,5 @@
 import Field from '../field';
 import Fixture from '../index';
-import { BuilderReturnFunction } from '../types';
 export interface ArrayOfFixtureBuilderOptions<T> {
   fixture: Fixture<T>;
   count?: number;

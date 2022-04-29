@@ -55,12 +55,12 @@
     "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.0.1"
   },
-  "peerDependencies": {
-    "efate": "^1.0.0-alpha.0"
-  },
   "dependencies": {
-
+    "efate": "^1.0.0-alpha.0",
     "uuid": "^3.3.3"
+  },
+  "peerDependencies": {
+
   },
   "gitHead": "efb910c750e2f0d779a271b73081de66eb6a888d"
 }

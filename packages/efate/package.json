@@ -1,6 +1,6 @@
 {
   "name": "efate",
-  "version": "1.0.0-alpha.0+efb910c",
+  "version": "1.0.0-alpha.0",
   "description": "javascript test fixture generator.  Autofixturejs 2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jcteague/efate-uuid.git"
+    "url": "git+https://github.com/jcteague/efate.git"
   },
   "keywords": [
     "testing",
