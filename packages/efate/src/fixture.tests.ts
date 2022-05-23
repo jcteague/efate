@@ -19,7 +19,6 @@ interface User {
   roles: string[];
   account: Account;
 }
-
 describe('fixture.specs', () => {
   const createFixture = createFixtureFactory();
   const accountFixture = createFixture<Account>((a) => {

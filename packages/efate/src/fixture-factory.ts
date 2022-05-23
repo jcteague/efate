@@ -4,9 +4,12 @@ import {FieldTypeSelector, fieldTypeGenerators} from './property-builders/field-
 
 export type DefineFieldsAction<T, TFieldTypeSelector> = (t: {[P in keyof T]: TFieldTypeSelector}) => void;
 
-export function createFixtureFactory<TFieldSelectorExtension>(extension = {}) {
+export function createFixtureFactory<TFieldSelectorExtension>(...extensions ) {
   function createFixture<T>(defineFields: DefineFieldsAction<T, FieldTypeSelector & TFieldSelectorExtension>){
-
+    const extension = extensions.reduce((obj, ext) => {
+      Object.keys(ext).forEach(k => obj[k] = ext[k]);
+      return obj;
+    }, {})
     const builders = {...fieldTypeGenerators, ...extension};
     const buildersList: Array<(increment: number) => Field<any>> = [];
     const proxy = new Proxy(
