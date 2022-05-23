@@ -13,7 +13,10 @@ const generateText = ({ minLength, maxLength }: LoremIpsumOptions): string => {
 };
 
 const loremIpsumBuilder =
-  (fieldName: string, options: LoremIpsumOptions = defaultOptions) =>
-  (increment: number) =>
-    new Field(fieldName, generateText(options));
+  (fieldName: string, [options]: [Partial<LoremIpsumOptions>?]) =>
+  (increment: number) =>{
+    const optionsWithDefaults  = {...defaultOptions, ...options};
+    return new Field(fieldName, generateText(optionsWithDefaults));
+  }
+
 export default loremIpsumBuilder;

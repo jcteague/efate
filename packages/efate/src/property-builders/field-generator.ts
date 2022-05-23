@@ -21,9 +21,6 @@ import ArrayOfFixtureBuilder, { ArrayOfFixtureBuilderOptions } from './array-of-
 import arrayOfFixtureBuilder from './array-of-fixture-builder';
 import loremIpsumBuilder from './lorem-ipsum-field-builder';
 
-export type DefineFieldAction<T> = (generator: FieldTypeBuilder<T>) => void;
-
-export type FieldTypeBuilder<T> = { [P in keyof T]: FieldTypeSelector };
 
 export interface FieldTypeSelector {
   asBoolean: () => void;
@@ -43,59 +40,23 @@ export interface FieldTypeSelector {
   arrayOfFixture: <T>(options: ArrayOfFixtureBuilderOptions<T>) => void;
   asLoremIpsum: (options?: LoremIpsumOptions) => void;
 }
-export type GenerateFieldFunc<T extends FieldTypeSelector = FieldTypeSelector> = (
-  builders,
-  fieldName: string,
-) => T;
 
-export const fieldTypeSelector = (builders, fieldName: string): FieldTypeSelector => ({
-  asBoolean() {
-    builders.push(asBooleanBuilder(fieldName));
-  },
+export const fieldTypeGenerators = {
+  asBoolean: asBooleanBuilder,
+  asNumber: asNumberBuilder,
+  asString: asStringBuilder,
+  withValue: withValueBuilder,
+  asConstant: withConstantBuilder,
+  firstName:  firstNameBuilder,
+  lastName: lastNameBuilder,
+  fullName: fullNameBuilder,
+  pickFrom: pickFromFieldBuilder,
+  asDate: asDateBuilder,
+  fromFixture: fromFixtureBuilder,
+  asArray: asArrayBuilder,
+  asEmail: asEmailBuilder,
+  as: buildFromFunction,
+  arrayOfFixture:arrayOfFixtureBuilder,
+  asLoremIpsum: loremIpsumBuilder,
+}
 
-  asNumber() {
-    builders.push(asNumberBuilder(fieldName));
-  },
-  asString() {
-    builders.push(asStringBuilder(fieldName));
-  },
-  withValue(value: string) {
-    builders.push(withValueBuilder(fieldName, value));
-  },
-  asConstant(value: string) {
-    builders.push(withConstantBuilder(fieldName, value));
-  },
-  firstName() {
-    builders.push(firstNameBuilder(fieldName));
-  },
-  lastName() {
-    builders.push(lastNameBuilder(fieldName));
-  },
-  fullName() {
-    builders.push(fullNameBuilder(fieldName));
-  },
-  pickFrom(options) {
-    builders.push(pickFromFieldBuilder(fieldName, options));
-  },
-  asDate(options?) {
-    builders.push(asDateBuilder(fieldName, options));
-  },
-  fromFixture(fixture) {
-    builders.push(fromFixtureBuilder(fieldName, fixture));
-  },
-  asArray(options?) {
-    builders.push(asArrayBuilder(fieldName, options));
-  },
-  asEmail() {
-    builders.push(asEmailBuilder(fieldName));
-  },
-  as(fn) {
-    builders.push(buildFromFunction(fieldName, fn));
-  },
-  arrayOfFixture(options) {
-    builders.push(arrayOfFixtureBuilder(fieldName, options));
-  },
-  asLoremIpsum(options?) {
-    builders.push(loremIpsumBuilder(fieldName, options));
-  },
-});

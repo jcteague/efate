@@ -1,9 +1,7 @@
 import { isFunction } from './utils';
 import * as merge from 'lodash.merge';
 import * as debugGenerator from 'debug';
-import { DefineFieldAction, FieldTypeBuilder } from './property-builders/field-generator';
-import { fieldTypeSelector } from './property-builders/field-generator';
-import Field from './field';
+import {FieldGeneratorFunc, } from "./types";
 const debug = debugGenerator('efate:fixture');
 
 type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
@@ -17,21 +15,11 @@ function applyOverrides(fixture: {}, overrides: {}) {
     merge(fixture, overrides);
   }
 }
-type FieldGeneratorFunc = (increment: number) => Field<any>;
+
 export default class Fixture<T> {
   private instanceCount: number;
   private builders: FieldGeneratorFunc[] = [];
-  constructor(defineFields: DefineFieldAction<T>) {
-    const builders = [];
-    const proxy = new Proxy(
-      {},
-      {
-        get(target, property) {
-          return fieldTypeSelector(builders, property.toString());
-        },
-      },
-    );
-    defineFields(proxy as FieldTypeBuilder<T>);
+  constructor(builders: FieldGeneratorFunc[]) {
     this.instanceCount = 1;
     this.builders = builders;
   }

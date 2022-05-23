@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jcteague/efate-uuid.git"
+    "url": "git+https://github.com/jcteague/efate.git"
   },
   "keywords": [
     "testing",
@@ -62,5 +62,6 @@
   },
   "files": [
     "dist/**/*"
-  ]
+  ],
+  "gitHead": "efb910c750e2f0d779a271b73081de66eb6a888d"
 }

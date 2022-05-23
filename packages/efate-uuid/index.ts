@@ -1,13 +1,13 @@
 // tslint:disable-next-line
-/// <reference path="./global.d.ts" />
-import {attachBuilderToStringProto, Field, BuilderReturnFunction} from 'efate';
+
+import { Field } from 'efate';
+
 import {v4} from 'uuid';
+const uuidBuilder = () =>(fieldName: string) => (increment: number) => new Field(fieldName, v4());
 
-const uuidBuilder = function(this: string): BuilderReturnFunction{
-  const fieldName = this;
-  return () =>
-    new Field(fieldName, v4())
+export interface UUIDExtension {
+  asUUID: () => void;
 };
-
-attachBuilderToStringProto('asUUID', uuidBuilder);
-export default uuidBuilder;
+export const  uuidFieldExtension = {
+  asUUID: uuidBuilder,
+}
