@@ -1,6 +1,6 @@
 {
   "name": "efate-uuid",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "efate generator for uuid",
   "main": "dist/index.js",
   "types": "dist/types.d.ts",
@@ -56,7 +56,7 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "efate": "^1.0.1",
+    "efate": "^1.0.2",
     "uuid": "^3.3.3"
   },
   "gitHead": "7965fa6c789299d2a4fbb20485e0127685de9b57"
