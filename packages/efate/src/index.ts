@@ -1,7 +1,7 @@
 import Fixture from './fixture';
 import { BuilderReturnFunction } from './types';
 import Field from './field';
-import {createFixtureFactory} from "./fixture-factory";
+import { createFixtureFactory } from './fixture-factory';
 import asArrayBuilder from './property-builders/array-field-builder';
 import asNumberBuilder from './property-builders/number-field-builder';
 import asBooleanBuilder from './property-builders/boolean-field-builder';

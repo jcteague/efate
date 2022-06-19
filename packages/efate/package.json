@@ -58,10 +58,11 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
-    "lodash.merge": "^4.6.2"
+    "lodash.merge": "^4.6.2",
+    "type-fest": "^2.13.1"
   },
   "files": [
     "dist/**/*"
   ],
-  "gitHead": "7965fa6c789299d2a4fbb20485e0127685de9b57"
+  "gitHead": "3024e235df77729d75426a66f39faa3798205ee2"
 }

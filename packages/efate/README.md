@@ -1,5 +1,5 @@
 ## Efate
-A Test Fixture Builder
+**A Test Fixture Builder**
 ![Image of Efate](https://www.shoreexcursionsgroup.com/img/tour/SPPVEFATE-2.jpg)
 
 ### Why use a fixture builder
@@ -11,7 +11,7 @@ Sometimes, when you need to vary the data for a test, it's tempting to create a 
 #### 
 
 ### Features
-Efate provides a typesafe way to define and create your fixtures. You can create the fixtures for each test, each with unique but understandable values.  You can also set specific values of fields of interest for the current test.
+efate provides a typesafe way to define and create your fixtures. You can create the fixtures for each test, each with unique but understandable values.  You can also set specific values of fields of interest for the current test.
 
 ### Creating a fixture
 1. Use `createFixtureFactory` to get the function to build fixtures.  This function is used for fixture extension.
@@ -62,7 +62,45 @@ const user = UserFixture.create((user) => {
 });
 // {firstName: 'George', lastName: 'lastName1'
 ```
+### Creating Arrays of Fixtures
+You can generate an array of fixtures by using the `UserFixture.createArrayWith`. The function accepts an override parameter that will either:
+* single `Partial` of the object that will override all objects in the array
+* a subset array that will override the matching index in the return array
+* a function that allows you to determine how the array will be overridden
+* no value and all arrays are created with default values
 
+**Override All elements**
+```typescript
+const users = UserFixture.createArrayWith(2, {firstName: 'George'});
+[
+    {firstName:'George', lastName: 'lastName1', ...}, 
+    {firstName:'George', lastName: 'lastName1', ...}
+]
+```
+** Override just the first element **
+```typescript
+const users = UserFixture.createArrayWith(2, [{firstName: 'George'}]);
+[
+    {firstName:'George', lastName: 'lastName1', ...}, 
+    {firstName:'George', lastName: 'lastName1', ...}
+]
+```
+** Override with a function **
+const users = UserFixture.createArrayWith(2, (idx, create) => {
+if (idx === 0){
+return create({firstName: 'George'});
+} else {
+return create();
+}
+});
+[
+{firstName:'George', lastName: 'George', ...},
+{firstName:'George', lastName: 'lastName1', ...}
+]
+```
+
+
+```typescript
 ### Specifying field types and special values
 The function passed to the `createFixture` allows you to determine how each field will be generated when you create a new fixture
 
@@ -88,14 +126,14 @@ All of the type generators behavior is described in the generated [Spec file](pa
   const user = userFixture.create();
   // {foo: 'bar1'}
   ```
-  
+
 * **asConstant()** does not increment the value of the field for all fixtures
 
 * **as((increment)=> val)** custom function to generate values. The `increment` parameter is the count of usages of the fixture
     ```javascript
     new Fixture('email'.as(increment => `email${increment}@company.com`);
     // {email: 'email1@company.com'}```
-  
+
 * **asNumber()** generates auto incrementing number values for the field
 
 * **asDate({incrementDay: boolean})** generates a date value for the field.  If `incrementDay` is true the day will increment for each fixture created.  Otherwise the same date is used for all fixtures.
@@ -107,8 +145,8 @@ All of the type generators behavior is described in the generated [Spec file](pa
     })
     // {roles: ['roles1']}
     ```
-  
-* **pickFrom([possible values])** randomly picks one of the possible values provided to set the field value. 
+
+* **pickFrom([possible values])** randomly picks one of the possible values provided to set the field value.
     ```javascript
     const fixture = createFixture<{role:string[]}>(t => {
       t.role.pickFrom(['user', 'admin'])
@@ -116,7 +154,7 @@ All of the type generators behavior is described in the generated [Spec file](pa
 
     //will generate {role: 'user'|'admin'}
     ```
-  
+
   * **fromFixture(Fixture)** When you need to nest an object created from another fixture
       ```javascript
     const userFixture = createFixture<User>(t => {
@@ -154,7 +192,7 @@ interface CustomDomainEmail {
 
 ### Create the builder
 You pass an object to `createFixtureFactory` that has a fieldName that matches the name of the interface
-that returns a curried function with the following signature, `fieldName: string, options: ?`  
+that returns a curried function with the following signature, `fieldName: string, options: ?`
 ```typescript
 {
   asCustomDomainEmail: (fieldName: string, domainName: string) => (increment: number) => Field;
@@ -163,7 +201,7 @@ that returns a curried function with the following signature, `fieldName: string
 **Example builder Function**
 ```Typescript
 const customDomainEmailExtension = {
-  asCustomDomainEmail: (fieldName: string, domainName: string = 'example.com') => 
+  asCustomDomainEmail: (fieldName: string, domainName: string = 'example.com') =>
           (increment: number) =>  return new Field(fieldName, `email${increment}@${domainName}`);
 }
 ```

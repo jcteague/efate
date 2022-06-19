@@ -21,7 +21,6 @@ import ArrayOfFixtureBuilder, { ArrayOfFixtureBuilderOptions } from './array-of-
 import arrayOfFixtureBuilder from './array-of-fixture-builder';
 import loremIpsumBuilder from './lorem-ipsum-field-builder';
 
-
 export interface FieldTypeSelector {
   asBoolean: () => void;
   asNumber: () => void;
@@ -47,7 +46,7 @@ export const fieldTypeGenerators = {
   asString: asStringBuilder,
   withValue: withValueBuilder,
   asConstant: withConstantBuilder,
-  firstName:  firstNameBuilder,
+  firstName: firstNameBuilder,
   lastName: lastNameBuilder,
   fullName: fullNameBuilder,
   pickFrom: pickFromFieldBuilder,
@@ -56,7 +55,6 @@ export const fieldTypeGenerators = {
   asArray: asArrayBuilder,
   asEmail: asEmailBuilder,
   as: buildFromFunction,
-  arrayOfFixture:arrayOfFixtureBuilder,
+  arrayOfFixture: arrayOfFixtureBuilder,
   asLoremIpsum: loremIpsumBuilder,
-}
-
+};

@@ -6,7 +6,7 @@ const defaultOptions = {
 } as DateBuilderOptions;
 
 const asDateBuilder =
-  (fieldName: string, [options]: [DateBuilderOptions?] =  [defaultOptions]) =>
+  (fieldName: string, [options]: [DateBuilderOptions?] = [defaultOptions]) =>
   (increment: number) => {
     const date = new Date();
     if (options?.incrementDay) {
