@@ -6,6 +6,8 @@
     "outDir": "./dist",
     "noImplicitAny": false,
     "strict": true,
-    "allowSyntheticDefaultImports": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules"]
 }

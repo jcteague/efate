@@ -35,29 +35,9 @@
     "url": "https://github.com/jcteague/efate/issues"
   },
   "homepage": "https://github.com/jcteague/efate#readme",
-  "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.5",
-    "@types/sinon": "^5.0.1",
-    "@types/sinon-chai": "^3.2.0",
-    "chai": "^4.1.2",
-    "husky": "^0.14.3",
-    "lerna": "^3.16.4",
-    "lint-staged": "^7.2.2",
-    "mocha": "^5.2.0",
-    "nyc": "^12.0.2",
-    "prettier": "^1.14.2",
-    "sinon": "^6.1.5",
-    "sinon-chai": "^3.2.0",
-    "source-map-support": "^0.5.9",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.0.1"
-  },
   "dependencies": {
-    "efate": "^1.1.0",
+    "efate": "file:../efate",
     "uuid": "^3.3.3"
   },
-  "gitHead": "3024e235df77729d75426a66f39faa3798205ee2"
+  "gitHead": "bb535dacbdb45907de49b394116760d5d24d04d4"
 }
