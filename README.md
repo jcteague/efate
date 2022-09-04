@@ -77,7 +77,7 @@ const users = UserFixture.createArrayWith(2, {firstName: 'George'});
     {firstName:'George', lastName: 'lastName1', ...}
 ]
 ```
-** Override just the first element **
+**Override just the first element**
 ```typescript
 const users = UserFixture.createArrayWith(2, [{firstName: 'George'}]);
 [
@@ -85,22 +85,23 @@ const users = UserFixture.createArrayWith(2, [{firstName: 'George'}]);
     {firstName:'George', lastName: 'lastName1', ...}
 ]
 ```
-** Override with a function **
+**Override with a function**
+```typescript
 const users = UserFixture.createArrayWith(2, (idx, create) => {
 if (idx === 0){
-return create({firstName: 'George'});
+  return create({firstName: 'George'});
 } else {
-return create();
+  return create();
 }
 });
+// results
 [
-{firstName:'George', lastName: 'George', ...},
-{firstName:'George', lastName: 'lastName1', ...}
+  {firstName:'George', lastName: 'George', ...},
+  {firstName:'George', lastName: 'lastName1', ...}
 ]
 ```
 
 
-```typescript
 ### Specifying field types and special values
 The function passed to the `createFixture` allows you to determine how each field will be generated when you create a new fixture
 
