@@ -74,7 +74,7 @@ You can generate an array of fixtures by using the `UserFixture.createArrayWith`
 const users = UserFixture.createArrayWith(2, {firstName: 'George'});
 [
     {firstName:'George', lastName: 'lastName1', ...}, 
-    {firstName:'George', lastName: 'lastName1', ...}
+    {firstName:'George', lastName: 'lastName2', ...}
 ]
 ```
 **Override just the first element**
@@ -82,7 +82,7 @@ const users = UserFixture.createArrayWith(2, {firstName: 'George'});
 const users = UserFixture.createArrayWith(2, [{firstName: 'George'}]);
 [
     {firstName:'George', lastName: 'lastName1', ...}, 
-    {firstName:'George', lastName: 'lastName1', ...}
+    {firstName:'George', lastName: 'lastName2', ...}
 ]
 ```
 **Override with a function**
@@ -96,8 +96,8 @@ if (idx === 0){
 });
 // results
 [
-  {firstName:'George', lastName: 'George', ...},
-  {firstName:'George', lastName: 'lastName1', ...}
+  {firstName:'George', lastName: 'lastName1', ...},
+  {firstName:'firstName2', lastName: 'lastName2', ...}
 ]
 ```
 
