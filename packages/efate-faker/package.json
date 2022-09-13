@@ -1,0 +1,43 @@
+{
+  "name": "efate-faker",
+  "version": "1.1.1",
+  "description": "use faker library to define properties in feat",
+  "main": "dist/index.js",
+  "types": "dist/types.d.ts",
+  "scripts": {
+    "prepublishOnly": "npm run compile",
+    "compile": "npm run clean && tsc -p .",
+    "clean": "rm -rf dist",
+    "precommit": "lint-staged",
+    "test": "nyc --extension .ts mocha -r ts-node/register -r source-map-support/register efate-faker.tests.ts",
+    "lint": "tslint ./src/**/*.ts",
+    "prettier": "prettier  --parser typescript --single-quote",
+    "prettier:write": "npm run prettier -- --write \"src/**/*.ts\""
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "npm run prettier:write",
+      "npm run lint",
+      "git diff --exit-code --stat"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcteague/efate.git"
+  },
+  "keywords": [
+    "testing",
+    "fixtures"
+  ],
+  "author": "John Teague",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jcteague/efate/issues"
+  },
+  "homepage": "https://github.com/jcteague/efate#readme",
+  "dependencies": {
+    "@faker-js/faker": "^7.5.0",
+    "efate": "file:../efate",
+    "faker": "^6.6.6"
+  }
+}

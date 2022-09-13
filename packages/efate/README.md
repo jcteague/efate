@@ -29,7 +29,7 @@ const userFixture = createFixture<User>(t => {
 ```
 3. Create the mock object using the fixture, overriding any values that you need to for the test.
 ```typescript
-const user = userFixture.create({userName: 'myUserName'});
+const user = userFixture.create({title: 'myUserName'});
 ```
 When you create a this fixture it will create an object that has the `firstName` and `lastName` fields with string values.
 
