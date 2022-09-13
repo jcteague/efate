@@ -1,7 +1,21 @@
 ## Efate
 **A Test Fixture Builder**
 ![Image of Efate](https://www.shoreexcursionsgroup.com/img/tour/SPPVEFATE-2.jpg)
-
+- [Efate](#efate)
+  - [Why use a fixture builder](#why-use-a-fixture-builder)
+- [Usage](#features)
+  - [Creating a fixture](#creating-a-fixture)
+  - [Using the fixture](#using-the-fixture)
+  - [Creating Arrays of Fixtures](#creating-arrays-of-fixtures)
+  - [Specifying field types and special values](#specifying-field-types-and-special-values)
+  - [Provided Type Generators](#provided-type-generators)
+- [Debugging](#debugging)
+- Extensions(#extension)
+  - [efate-uuid](#efate-uuid)
+  - [efate-faker](#efate-faker)
+- [Extending Efate with your own type builder](#extending-efate-with-your-own-type-builder)
+  - [Creating the interface](#creating-the-interface)
+  - [Create the builder](#create-the-builder)
 ### Why use a fixture builder
 If you have a moderate to large web app and are using JSON files to store your test fixtures, a test fixture library can solve several issues you may be experiencing.
 #### Test Fixture Change Transference
@@ -9,8 +23,16 @@ When you load the json file into a test file, you have a single instance of that
 #### Inconsistent Test Data
 Sometimes, when you need to vary the data for a test, it's tempting to create a new object with the information needed just for that single test.  This leads to a proliferation of unstructured test data that can be difficult and time consuming to update when data structures change.
 #### 
+## Installation
 
-### Features
+```
+npm install efate 
+```
+Install any extensions you want to use
+- efate-uuid
+- efate-faker
+
+## Usage
 efate provides a typesafe way to define and create your fixtures. You can create the fixtures for each test, each with unique but understandable values.  You can also set specific values of fields of interest for the current test.
 
 ### Creating a fixture
@@ -174,8 +196,33 @@ All of the type generators behavior is described in the generated [Spec file](pa
 * **asLastName()** uses value from list of possible names to create more realistic data
 * **asFullName()** combines first name and last name values
 * **asLoremIpsum({minLength: 10,  maxLength: 25})** generates ispsum lorem text for generating longer text.  Useful when using this tool for seed data.
+## Debugging
+If you have any trouble with how your fixtures are being generated, efate uses the [Debug](https://github.com/debug-js/debug) library.  You can turn on debug statements with the following environment variable
+```
+DEBUG=efate:
+```
+## Extensions
+There are several extensions available to use with efate that expand the library with new field definitions.
+- efate-uuid: creates unique identifiers using
+- efate-faker: use the faker library to generate field values
 
+### Using an extension
+Extensions have two parts:
+1. An interface that describes usage
+2. A function that handles the implementation for the extension
 
+These are passed to the `createFixtureFactory` function; the interface as a type parameter and the function as a function parameter.
+```typescript
+import {createFixtureFactory} from 'efate';
+import {UUIDExtension, uuidExtension} from 'efate-uuid';
+
+const createFixture = createFixtureFactory<UUIDExtension>(uuidExtension)
+
+const userFixture = createFixture(t => {
+  t.id.asUUID();
+})
+
+```
 ## Extending Efate with your own type builder
 You can extend the efate with your own custom type builder.  An example is the [efate-uuid](/packages/efate-uuid) builder that creates valid UUID values
 
