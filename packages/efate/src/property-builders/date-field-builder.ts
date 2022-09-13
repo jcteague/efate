@@ -4,6 +4,7 @@ import { DateBuilderOptions } from '../types';
 const defaultOptions = {
   incrementDay: false,
 } as DateBuilderOptions;
+[];
 
 const asDateBuilder =
   (fieldName: string, [options]: [DateBuilderOptions?] = [defaultOptions]) =>

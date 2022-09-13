@@ -15,6 +15,8 @@ export function createFixtureFactory<TFieldSelectorExtension>(...extensions) {
       return obj;
     }, {});
     const builders = { ...fieldTypeGenerators, ...extension };
+    {
+    }
     const buildersList: Array<(increment: number) => Field<any>> = [];
     const proxy = new Proxy(
       {},
