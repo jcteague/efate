@@ -11,7 +11,7 @@
   - [Specifying field types and special values](#specifying-field-types-and-special-values)
   - [Provided Type Generators](#provided-type-generators)
 - [Debugging](#debugging)
-- Extensions(#extensions)
+- [Extensions](#extensions)
   - [efate-uuid](#efate-uuid)
   - [efate-faker](#efate-faker)
 - [Extending Efate with your own type builder](#extending-efate-with-your-own-type-builder)
