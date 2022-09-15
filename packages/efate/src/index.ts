@@ -1,7 +1,7 @@
 import Fixture from './fixture';
 import { BuilderReturnFunction } from './types';
 import Field from './field';
-import { createFixtureFactory } from './fixture-factory';
+import { defineFixtureFactory, defineFixture, createFixtureFactory } from './fixture-factory';
 import asArrayBuilder from './property-builders/array-field-builder';
 import asNumberBuilder from './property-builders/number-field-builder';
 import asBooleanBuilder from './property-builders/boolean-field-builder';
@@ -27,4 +27,4 @@ const propertyBuilders = {
 import { DateBuilderOptions, LoremIpsumOptions } from './types';
 
 export default Fixture;
-export { BuilderReturnFunction, Field, createFixtureFactory };
+export { BuilderReturnFunction, Field, createFixtureFactory, defineFixtureFactory, defineFixture };

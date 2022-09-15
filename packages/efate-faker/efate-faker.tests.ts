@@ -1,14 +1,14 @@
 import * as chai from 'chai';
 const expect = chai.expect;
 import { FakerExtension, fakerExtension } from './index';
-import { createFixtureFactory, Field } from 'efate';
+import { defineFixtureFactory, Field } from 'efate';
 interface User {
   name: string;
   title: string;
 }
 describe('efate-faker', () => {
-  const createFixture = createFixtureFactory<FakerExtension>(fakerExtension);
-  const userFixture = createFixture<User>((t) => {
+  const defineFixture = defineFixtureFactory<FakerExtension>(fakerExtension);
+  const userFixture = defineFixture<User>((t) => {
     t.name.faker((f) => f.name.firstName());
     t.title.faker((f, increment) => `${f.name.jobTitle()}${increment}`);
   });

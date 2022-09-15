@@ -5,8 +5,15 @@ import { FieldTypeSelector, fieldTypeGenerators } from './property-builders/fiel
 export type DefineFieldsAction<T, TFieldTypeSelector> = (t: {
   [P in keyof T]: TFieldTypeSelector;
 }) => void;
-
 export function createFixtureFactory<TFieldSelectorExtension>(...extensions) {
+  // tslint:disable-next-line:no-console
+  console.warn(
+    'Deprecation Notice! createFixtureFactory has been renamed to defineFixtureFactory.  createFixtureFactory function will be removed in future major versions',
+  );
+  return defineFixtureFactory<TFieldSelectorExtension>(...extensions);
+}
+
+export function defineFixtureFactory<TFieldSelectorExtension>(...extensions) {
   function createFixture<T>(
     defineFields: DefineFieldsAction<T, FieldTypeSelector & TFieldSelectorExtension>,
   ) {
@@ -36,4 +43,7 @@ export function createFixtureFactory<TFieldSelectorExtension>(...extensions) {
     return new Fixture<T>(buildersList);
   }
   return createFixture;
+}
+export function defineFixture<T>(defineFields: DefineFieldsAction<T, FieldTypeSelector>) {
+  return defineFixtureFactory()(defineFields);
 }
