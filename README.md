@@ -4,16 +4,15 @@
 - [Efate](#efate)
   - [Why use a fixture builder](#why-use-a-fixture-builder)
 - [Installation](#installation)
-- [Usage](#features)
-  - [Creating a fixture](#creating-a-fixture)
-  - [Using the fixture](#using-the-fixture)
+- [Usage](#usage)
+  - [Defining the Fixure](#defining-the-fixure)
+  - [Creating test objects](#creating-test-objects)
   - [Creating Arrays of Fixtures](#creating-arrays-of-fixtures)
   - [Specifying field types and special values](#specifying-field-types-and-special-values)
   - [Provided Type Generators](#provided-type-generators)
 - [Debugging](#debugging)
 - [Extensions](#extensions)
-  - [efate-uuid](#efate-uuid)
-  - [efate-faker](#efate-faker)
+  - [Using an extension](#using-an-extension)
 - [Extending Efate with your own type builder](#extending-efate-with-your-own-type-builder)
   - [Creating the interface](#creating-the-interface)
   - [Create the builder](#create-the-builder)
@@ -29,46 +28,51 @@ Sometimes, when you need to vary the data for a test, it's tempting to create a 
 ```
 npm install efate 
 ```
-Install any extensions you want to use
-- efate-uuid
-- efate-faker
+Install any extensions you want to use, two are currently available from this repo:
+- [efate-uuid](https://github.com/jcteague/efate/tree/master/packages/efate-uuid)
+- [efate-faker](https://github.com/jcteague/efate/tree/master/packages/efate-faker)
 
 ## Usage
 efate provides a typesafe way to define and create your fixtures. You can create the fixtures for each test, each with unique but understandable values.  You can also set specific values of fields of interest for the current test.
 
-### Creating a fixture
-1. Use `createFixtureFactory` to get the function to build fixtures.  This function is used for fixture extension.
-```
-const createFixture = createFixtureFactory() // returns a function that will create fixtures.
-``` 
-2. Use the the function to create the fixture, using the fixture definition to specify the field fields and how the values should be generated.
+There are two phase to fixture usage:
+1. Fixture definition
+2. Object creation
+
+### Defining the Fixure
+Import `defineFixture` to create a standard fixture (without any extensions).
+
 ```typescript
-const userFixture = createFixture<User>(t => {
+import {defineFixture} from "efate";
+```
+Using this function, you can define what fields should be populated and how.
+
+```typescript
+const userFixture = define<User>(t => {
   t.id.asNumber();  // id field will be numberical value that increments as you create user objects
   t.firstName.asString(); 
   t.lastName.asString();
 })
 
+export {userFixture};
 ```
-3. Create the mock object using the fixture, overriding any values that you need to for the test.
-```typescript
-const user = userFixture.create({title: 'myUserName'});
-```
-When you create a this fixture it will create an object that has the `firstName` and `lastName` fields with string values.
+### Creating test objects
 
-### Using the fixture
+Import the test fixture into your file and create the mock object, overriding any values that you need to for the test.
+
 ```javascript
+import {userFixture} from '<your fixtures>';
 // generatate a fixture with system generated values
-const user = UserFixture.create();
-// {firstName: 'firstName1', lastName: 'lastName1'
+const user = userFixture.create();
+// {id: 1, firstName: 'firstName1', lastName: 'lastName1'}
 ```
 As you create more fixtures, the values will vary by incrementing the number for each field
 ```typescript
 // generatate a fixture with system generated values
 const user = userFixture.create();
-// {firstName: 'firstName1', lastName: 'lastName1'
+// {id: 1, firstName: 'firstName1', lastName: 'lastName1'
 const user = userFixture.create();
-// {firstName: 'firstName2', lastName: 'lastName2'
+// {id: 2, firstName: 'firstName2', lastName: 'lastName2'
 ```
 You can override specific fields of the test fixture to test specific cases in your tests and still have complete objects
 
@@ -142,7 +146,8 @@ const userFixture = createFixture<User>(t => {
 ```
 ### Provided Type Generators
 All of the type generators behavior is described in the generated [Spec file](packages/efate/spec.md).
-* **withValues()** uses specified text to generate values
+* **withValues()** 
+ uses specified text to generate values
   ```typescript
   const userFixture = createFixture<{foo:string}>(t => {
     t.foo.withValue('bar')
@@ -208,18 +213,19 @@ There are several extensions available to use with efate that expand the library
 - efate-faker: use the faker library to generate field values
 
 ### Using an extension
+To use an extension, you must use the `defineFixtureFactory` method to include any of the extension you plan to use as part of the `defineFixture` function.
 Extensions have two parts:
 1. An interface that describes usage
 2. A function that handles the implementation for the extension
 
-These are passed to the `createFixtureFactory` function; the interface as a type parameter and the function as a function parameter.
+These are passed to the `defineFixture` function; the interface as a type parameter and the function as a function parameter.
 ```typescript
-import {createFixtureFactory} from 'efate';
+import {defineFixtureFactory} from 'efate';
 import {UUIDExtension, uuidExtension} from 'efate-uuid';
 
-const createFixture = createFixtureFactory<UUIDExtension>(uuidExtension)
+const defineFixture = defineFixtureFactory<UUIDExtension>(uuidExtension)
 
-const userFixture = createFixture(t => {
+const userFixture = defineFixture(t => {
   t.id.asUUID();
 })
 

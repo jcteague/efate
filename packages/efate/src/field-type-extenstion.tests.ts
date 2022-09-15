@@ -1,6 +1,6 @@
 import Field from './field';
 import { expect } from 'chai';
-import { createFixtureFactory } from './fixture-factory';
+import { defineFixtureFactory } from './fixture-factory';
 
 interface FixtureExtension {
   asSSN(startValue: number): () => void;
@@ -28,8 +28,8 @@ interface User {
 }
 describe('when extending with new field generators', () => {
   it('should provide the extended build as an option when creating the fixture', () => {
-    const createFixture = createFixtureFactory<FixtureExtension>(ssnExtension);
-    const userFixture = createFixture<User>((t) => {
+    const defineFixture = defineFixtureFactory<FixtureExtension>(ssnExtension);
+    const userFixture = defineFixture<User>((t) => {
       t.ssn.asSSN(2);
       t.name.asString();
       t.email.asString();
@@ -39,8 +39,8 @@ describe('when extending with new field generators', () => {
     expect(user.name).to.eql('name1');
   });
   it('should allow extension to be optional', () => {
-    const createFixture = createFixtureFactory();
-    const userFixture = createFixture<User>((t) => {
+    const defineFixture = defineFixtureFactory();
+    const userFixture = defineFixture<User>((t) => {
       t.name.asString();
       t.ssn.asString();
       t.email.asString();
@@ -50,11 +50,11 @@ describe('when extending with new field generators', () => {
     expect(user.ssn).eql('ssn1');
   });
   it('should use all extenstions passed to it', () => {
-    const createFixture = createFixtureFactory<CustomEmailDomainExtension & FixtureExtension>(
+    const defineFixture = defineFixtureFactory<CustomEmailDomainExtension & FixtureExtension>(
       ssnExtension,
       customEmailExtension,
     );
-    const userFixture = createFixture<User>((t) => {
+    const userFixture = defineFixture<User>((t) => {
       t.ssn.asSSN(2);
       t.email.emailWithDomain('example.com');
     });
