@@ -1,10 +1,25 @@
 import Field from './field';
 import Fixture from './fixture';
 import { FieldTypeSelector, fieldTypeGenerators } from './property-builders/field-generator';
+import { FieldGeneratorFunc } from './types';
+import * as debugGenerator from 'debug';
+const debug = debugGenerator('efate:fixture-factory');
 
-export type DefineFieldsAction<T, TFieldTypeSelector> = (t: {
+interface ExtendsFixture {
+  extends: (fixture: Fixture<any>) => void;
+}
+type MappedFieldTypeSelector<T, TFieldTypeSelector> = {
   [P in keyof T]: TFieldTypeSelector;
-}) => void;
+};
+type DefineFieldsActionParam<T, TFieldTypeSelector> = MappedFieldTypeSelector<
+  T,
+  TFieldTypeSelector
+> &
+  ExtendsFixture;
+
+export type DefineFieldsAction<T, TFieldTypeSelector> = (
+  t: DefineFieldsActionParam<T, TFieldTypeSelector>,
+) => void;
 export function createFixtureFactory<TFieldSelectorExtension>(...extensions) {
   // tslint:disable-next-line:no-console
   console.warn(
@@ -22,13 +37,19 @@ export function defineFixtureFactory<TFieldSelectorExtension>(...extensions) {
       return obj;
     }, {});
     const builders = { ...fieldTypeGenerators, ...extension };
-    {
-    }
-    const buildersList: Array<(increment: number) => Field<any>> = [];
+
+    const buildersList: FieldGeneratorFunc[] = [];
+    let extendedFixture;
     const proxy = new Proxy(
       {},
       {
         get(target, property) {
+          if (property === 'extends') {
+            debug('extending another fixture');
+            return (fixture: Fixture<any>) => {
+              extendedFixture = fixture;
+            };
+          }
           const wrappedBuilders = Object.keys(builders).reduce((obj, key) => {
             obj[key] = (...args) => {
               buildersList.push(builders[key](property, args));
@@ -39,8 +60,10 @@ export function defineFixtureFactory<TFieldSelectorExtension>(...extensions) {
         },
       },
     );
-    defineFields(proxy as { [P in keyof T]: FieldTypeSelector & TFieldSelectorExtension });
-    return new Fixture<T>(buildersList);
+    defineFields(
+      proxy as { [P in keyof T]: FieldTypeSelector & TFieldSelectorExtension } & ExtendsFixture,
+    );
+    return new Fixture<T>(buildersList, extendedFixture);
   }
   return createFixture;
 }

@@ -38,6 +38,7 @@ export interface FieldTypeSelector {
   as: <T>(fn: (increment: number) => T) => void;
   arrayOfFixture: <T>(options: ArrayOfFixtureBuilderOptions<T>) => void;
   asLoremIpsum: (options?: LoremIpsumOptions) => void;
+  extends: <T>(fixture: Fixture<T>) => void;
 }
 
 export const fieldTypeGenerators = {
