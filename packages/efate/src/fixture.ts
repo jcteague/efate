@@ -29,11 +29,14 @@ function applyOverrides<T>(fixture: {}, overrides: Override<T>) {
 }
 
 export default class Fixture<T> {
-  private instanceCount: number;
   private builders: FieldGeneratorFunc[] = [];
-  constructor(builders: FieldGeneratorFunc[]) {
+  private instanceCount: number;
+  constructor(builders: FieldGeneratorFunc[], extendFixture: Fixture<any> | null = null) {
     this.instanceCount = 1;
     this.builders = builders;
+    if (extendFixture) {
+      this.builders.push(...extendFixture.builders);
+    }
   }
 
   public create(overrides?: Override<T>): T {

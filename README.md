@@ -9,6 +9,7 @@
   - [Creating test objects](#creating-test-objects)
   - [Creating Arrays of Fixtures](#creating-arrays-of-fixtures)
   - [Specifying field types and special values](#specifying-field-types-and-special-values)
+  - [Extending Fixtures](#extending-fixtures)
   - [Provided Type Generators](#provided-type-generators)
 - [Debugging](#debugging)
 - [Extensions](#extensions)
@@ -141,9 +142,32 @@ const userFixture = createFixture<User>(t => {
   t.lastName.asString();
   t.dateOfBirth.asDate();
 })
+```
+### Extending Fixtures
+If you have a type that extends another type, or you have a common set of fields used in multiple objects, you can extend a fixture so you can reuse an existing fixture definition to add fields to another fixture.
 
+```typescript
+import {defineFixture} from "efate";
+
+interface User {
+  name: string;
+}
+
+interface LoggedInUser extends User {
+  lastLoginDate: Date
+}
+
+const UserFixture = defineFixture<User>(t => {
+  t.name.asString();
+})
+//use UserFixture to add fields to LoggedInuser fixture
+const LoggedInUserFixture = defineFixture<LoggedInUser>(t =>{
+  t.extend(UserFixture);
+  t.lastLoginDate.asDate();
+})
 
 ```
+
 ### Provided Type Generators
 All of the type generators behavior is described in the generated [Spec file](packages/efate/spec.md).
 * **withValues()** 

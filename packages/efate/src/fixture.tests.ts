@@ -93,6 +93,30 @@ describe('fixture.specs', () => {
     });
   });
 
+  describe('extends', () => {
+    it('should included the fields it is being extended from', () => {
+      interface Parent {
+        a: string;
+        b: string;
+      }
+      interface Child extends Parent {
+        c: string;
+      }
+      const ParentFixture = defineFixture<Parent>((t) => {
+        t.a.asString();
+        t.b.asString();
+      });
+      const ChildFixture = defineFixture<Child>((t) => {
+        t.extends(ParentFixture);
+        t.c.asString();
+      });
+      const extendedObj = ChildFixture.create();
+      expect(extendedObj).to.have.property('a');
+      expect(extendedObj).to.have.property('b');
+      expect(extendedObj).to.have.property('c');
+    });
+  });
+
   describe('create array of fixture', () => {
     it('should make an array of the object of the provided length', () => {
       const fixtures = userFixture.createArrayWith(5);
