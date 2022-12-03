@@ -32,10 +32,8 @@ export function defineFixtureFactory<TFieldSelectorExtension>(...extensions) {
   function createFixture<T>(
     defineFields: DefineFieldsAction<T, FieldTypeSelector & TFieldSelectorExtension>,
   ) {
-    const extension = extensions.reduce((obj, ext) => {
-      Object.keys(ext).forEach((k) => (obj[k] = ext[k]));
-      return obj;
-    }, {});
+    const extension = Object.assign({}, ...extensions);
+
     const builders = { ...fieldTypeGenerators, ...extension };
 
     const buildersList: FieldGeneratorFunc[] = [];

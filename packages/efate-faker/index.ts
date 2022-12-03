@@ -1,5 +1,5 @@
 import { faker, Faker } from '@faker-js/faker';
-const { Field } = require('efate');
+import { Field } from 'efate';
 
 export interface FakerExtension {
   faker: (fake: (f: Faker, increment: number) => any) => void;
