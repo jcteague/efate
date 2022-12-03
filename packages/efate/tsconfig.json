@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "lib": ["ES2019"],
     "module": "commonjs",
+    "target": "ES2019",
     "declaration": true,
     "outDir": "./dist",
     "noImplicitAny": false,
