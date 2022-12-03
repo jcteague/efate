@@ -36,8 +36,7 @@
   },
   "homepage": "https://github.com/jcteague/efate#readme",
   "dependencies": {
-    "@faker-js/faker": "^7.5.0",
-    "efate": "file:../efate",
-    "faker": "^6.6.6"
+    "@faker-js/faker": "^7.6.0",
+    "efate": "file:../efate"
   }
 }
