@@ -49,7 +49,7 @@ import {defineFixture} from "efate";
 Using this function, you can define what fields should be populated and how.
 
 ```typescript
-const userFixture = define<User>(t => {
+const userFixture = defineFixture<User>(t => {
   t.id.asNumber();  // id field will be numberical value that increments as you create user objects
   t.firstName.asString(); 
   t.lastName.asString();
