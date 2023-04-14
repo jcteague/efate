@@ -7,6 +7,7 @@
 - [Usage](#usage)
   - [Defining the Fixure](#defining-the-fixure)
   - [Creating test objects](#creating-test-objects)
+  - [Omitting Fields](#omitting-fields)
   - [Creating Arrays of Fixtures](#creating-arrays-of-fixtures)
   - [Specifying field types and special values](#specifying-field-types-and-special-values)
   - [Extending Fixtures](#extending-fixtures)
@@ -89,6 +90,35 @@ const user = UserFixture.create((user) => {
     user.firstName = 'George';
 });
 // {firstName: 'George', lastName: 'lastName1'
+```
+### Omitting fields
+Sometimes you need to create an object that doesn't have all fields.  You can use the `omit` function on fixture to specify if any fields on the type should be ommitted.
+```typescript
+// a Order object that is store in the database
+interface UserModel {
+  id: number,
+  firstName: string;
+  lastName: string;
+  dateCreated: Date;
+  dateUpdated: Date;
+}
+```
+If you want to create fixture that would represent the object to be saved (without id, dateCreated/updated)
+```typescript
+const userInput = userFixture
+        .omit('id', 'dateCreated', 'dateUpdated')
+        .create();
+// {firstName: 'firstName1', lastName: 'lastName1'}
+```
+This function is useful when you need to omit fields on a one-off basis.  You can also create a fixture with the `Omit` utility type and not define builders for the omitted fields.
+```typescript
+
+const UserInputFixture = defineFixture<Omit<UserModel,'id', 'dateCreated', 'dateUpdated'>>(t => {
+  firstName: string;
+  lastName: string;
+})
+const userInput = UserInputFixture.create();
+// {firstName: 'firstName1', lastName: 'lastName1'}
 ```
 ### Creating Arrays of Fixtures
 You can generate an array of fixtures by using the `UserFixture.createArrayWith`. The function accepts an override parameter that will either:

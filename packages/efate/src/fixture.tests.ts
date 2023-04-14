@@ -54,6 +54,21 @@ describe('fixture.specs', () => {
     expect(fixture).to.have.property('roles');
     expect(fixture.roles).to.eql(['roles1']);
   });
+  it('should omit fields from the fixture', () => {
+    const fixture = userFixture.omit('id').create();
+    expect(fixture).to.not.have.property('id');
+  });
+  it('should not create fields not included in the fixture definition', function () {
+    const UserInputFixture = defineFixture<Omit<User, 'id'>>((f) => {
+      f.firstName.asString();
+      f.lastName.asString();
+      f.date.asDate();
+      f.account.fromFixture(accountFixture);
+      f.roles.asArray();
+    });
+    const userInput = UserInputFixture.create();
+    expect(userInput).to.not.have.property('id');
+  });
 
   describe('overrides', () => {
     it('should let users override values for specific fields on the fixture', () => {
@@ -80,12 +95,14 @@ describe('fixture.specs', () => {
     // });
     it('can override nested objects', () => {
       const date = new Date(2022, 0, 1, 1, 0, 0);
+
       const fixture = userFixture.create({
         firstName: 'bob',
         date,
         account: { userName: 'user name overridden' } as Account,
       });
-      expect(fixture.id).to.exist;
+
+      expect(fixture).to.have.property('id');
       expect(fixture.date).to.equal(date);
       expect(fixture.account).to.exist;
       expect(fixture.account.passWord).to.contain('passWord');

@@ -29,6 +29,7 @@ function applyOverrides<T>(fixture: {}, overrides: Override<T>) {
 }
 
 export default class Fixture<T> {
+  private omittedFields: string[] = [];
   private builders: FieldGeneratorFunc[] = [];
   private instanceCount: number;
   constructor(builders: FieldGeneratorFunc[], extendFixture: Fixture<any> | null = null) {
@@ -44,16 +45,21 @@ export default class Fixture<T> {
     this.builders.forEach((builder) => {
       debug('builder: %o', builder);
       const field = builder(this.instanceCount);
-      debug('generated field %o', field);
-      Object.defineProperty(fixture, field.name, {
-        value: field.value,
-        enumerable: true,
-        writable: true,
-      });
+      if (this.omittedFields.includes(field.name)) {
+        debug('omitting field %s', field.name);
+      } else {
+        debug('generated field %o', field);
+        Object.defineProperty(fixture, field.name, {
+          value: field.value,
+          enumerable: true,
+          writable: true,
+        });
+      }
     });
     if (overrides) {
       applyOverrides(fixture, overrides);
     }
+    this.omittedFields = [];
     this.instanceCount++;
     return fixture;
   }
@@ -77,5 +83,9 @@ export default class Fixture<T> {
       }
     }
     return results;
+  }
+  public omit(...fields: string[]) {
+    this.omittedFields.push(...fields);
+    return this;
   }
 }
