@@ -7,7 +7,7 @@ export interface FakerExtension {
 
 export const fakerExtension = {
   faker:
-    (fieldName, [fake]: [(f: Faker, increment: number) => any]) =>
-    (increment) =>
+    (fieldName: string, [fake]: [(f: Faker, increment: number) => any]) =>
+    (increment: number) =>
       new Field(fieldName, fake(faker, increment)),
 };
