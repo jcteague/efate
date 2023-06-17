@@ -194,6 +194,20 @@ describe('fixture.specs', () => {
         expect(f1.date.getDate()).to.be.equal(today.getDate());
         expect(f2.date.getDate()).to.be.equal(today.getDate() + 1);
       });
+      it('should use date formatter', () => {
+        const today = new Date();
+        const builder = defineFixture<{ date: Date }>((t) => t.date.asDate({ formatter: date => date.getMonth() }))
+        const fixture = builder.create();
+        expect(fixture.date).to.be.equal(today.getMonth());
+      })
+      it('should increment the date instances with formatter', () => {
+        const today = new Date();
+        const builder = defineFixture<{ date: Date }>((t) => t.date.asDate({ incrementDay: true, formatter: date => date.getDate() }))
+        const f1 = builder.create();
+        const f2 = builder.create();
+        expect(f1.date).to.be.equal(today.getDate());
+        expect(f2.date).to.be.equal(today.getDate() + 1);
+      })
     });
     describe('asNumber()', () => {
       const fb = defineFixture<{ id: number }>((t) => t.id.asNumber());

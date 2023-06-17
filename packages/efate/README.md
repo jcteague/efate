@@ -136,7 +136,9 @@ All of the type generators behavior is described in the generated [Spec file](pa
 
 * **asNumber()** generates auto incrementing number values for the field
 
-* **asDate({incrementDay: boolean})** generates a date value for the field.  If `incrementDay` is true the day will increment for each fixture created.  Otherwise the same date is used for all fixtures.
+* **asDate(options)** generates a date value for the field. 
+  * **asDate({incrementDay: boolean})** If `incrementDay` is true the day will increment for each fixture created.  Otherwise the same date is used for all fixtures.
+  * **asDate({formatter: date => val})** Allow to format returned value (e.g. using methods of Date instance).
 * **asBoolean()** generates a boolean value for the field
 * **asArray(length = 1)** generates an array for the field.  The `length` parameter specifies length of the array, defaulted to 1
     ```javascript

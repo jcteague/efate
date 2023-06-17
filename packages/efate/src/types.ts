@@ -1,9 +1,10 @@
 import Field from './field';
 
 // export type FieldBuilder = (increment: number) => BuilderReturnFunction;
-export interface DateBuilderOptions {
+export type DateBuilderOptions = Partial<{
   incrementDay: boolean;
-}
+  formatter: (date: Date) => any;
+}>
 export type FieldGeneratorFunc = (increment: number) => Field<any>;
 export type BuilderReturnFunction<T> = (increment: number) => Field<T>;
 
