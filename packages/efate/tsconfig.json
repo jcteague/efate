@@ -7,8 +7,7 @@
     "outDir": "./dist",
     "noImplicitAny": false,
     "strict": true,
-
-
+    "esModuleInterop": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

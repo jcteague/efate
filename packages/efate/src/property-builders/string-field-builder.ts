@@ -1,7 +1,5 @@
 import Field from '../field';
 import { firstNames, lastNames } from './names';
-import * as debugFn from 'debug';
-const debug = debugFn('efate:string-field-builder');
 
 const asStringBuilder = (fieldName: string) => (increment: number) =>
   new Field(fieldName, `${fieldName}${increment}`);
@@ -13,7 +11,7 @@ const withValueBuilder =
 
 const withConstantBuilder =
   (fieldName: string, [constantValue]: [string]) =>
-  (increment: number) =>
+  () =>
     new Field(fieldName, constantValue);
 
 const getRandomElement = (list: any[]) => {
@@ -21,13 +19,13 @@ const getRandomElement = (list: any[]) => {
   return list[i];
 };
 
-const firstNameBuilder = (fieldName: string) => (increment: number) =>
+const firstNameBuilder = (fieldName: string) => () =>
   new Field(fieldName, getRandomElement(firstNames));
 
-const lastNameBuilder = (fieldName: string) => (increment: number) =>
+const lastNameBuilder = (fieldName: string) => () =>
   new Field(fieldName, getRandomElement(lastNames));
 
-const fullNameBuilder = (fieldName: string) => (increment: number) =>
+const fullNameBuilder = (fieldName: string) => () =>
   new Field(fieldName, `${getRandomElement(firstNames)} ${getRandomElement(lastNames)}`);
 
 export {

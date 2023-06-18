@@ -1,15 +1,17 @@
-/* tslint:disable: no-unused-expression */
-import * as chai from 'chai';
+import chai from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import { defineFixture } from './fixture-factory';
+
 const expect = chai.expect;
-import * as sinon from 'sinon';
-import * as sinonChai from 'sinon-chai';
+
 chai.use(sinonChai);
 
-import { createFixtureFactory, defineFixture } from './fixture-factory';
 interface Account {
   userName: string;
   passWord: string;
 }
+
 interface User {
   id?: number;
   firstName: string;
@@ -19,6 +21,7 @@ interface User {
   roles: string[];
   account: Account;
 }
+
 describe('fixture.specs', () => {
   const accountFixture = defineFixture<Account>((a) => {
     a.userName.asString();
