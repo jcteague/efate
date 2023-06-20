@@ -1,8 +1,9 @@
 import debugGenerator from 'debug';
 import merge from 'lodash.merge';
 import type { PartialDeep } from 'type-fest';
-import { isFunction } from './utils';
+
 import { BuilderGeneratorFunction } from './types';
+import { isFunction } from './utils';
 
 const debug = debugGenerator('efate:fixture-factory');
 
@@ -27,7 +28,7 @@ export default class Fixture<T> {
   }
 
   public create(overrides?: Overrides<T>): T {
-    let fixture = {} as T;
+    const fixture = {} as T;
 
     this.builders.forEach((builder) => {
       debug('builder: %o', builder);

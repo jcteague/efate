@@ -1,4 +1,5 @@
 import asArrayBuilder from './array-field-builder';
+import arrayOfFixtureBuilder from './array-of-fixture-builder';
 import asBooleanBuilder from './boolean-field-builder';
 import asDateBuilder from './date-field-builder';
 import asEmailBuilder from './email-field-builder';
@@ -7,7 +8,6 @@ import buildFromFunction from './function-field-builder';
 import loremIpsumBuilder from './lorem-ipsum-field-builder';
 import asNumberBuilder from './number-field-builder';
 import pickFromBuilder from './pick-from-field-builder';
-import arrayOfFixtureBuilder from './array-of-fixture-builder';
 import { asStringBuilder } from './string-field-builder';
 
 const fieldBuilders = {

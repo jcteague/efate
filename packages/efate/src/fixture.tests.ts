@@ -1,6 +1,7 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
+
 import { defineFixture } from './fixture-factory';
 
 const expect = chai.expect;

@@ -1,6 +1,7 @@
 import Field from '../field';
 import { BuilderReturnFunction, LoremIpsumOptions } from '../types';
 import { loremIpsumText } from './lorem-ipsum';
+
 const defaultOptions: LoremIpsumOptions = {
   maxLength: 25,
   minLength: 10,

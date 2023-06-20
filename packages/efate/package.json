@@ -10,9 +10,6 @@
     "clean": "rm -rf dist",
     "precommit": "lint-staged",
     "test": "nyc --extension .ts mocha -r ts-node/register -r source-map-support/register src/**/*.tests.ts",
-    "lint": "tslint ./src/**/*.ts",
-    "prettier": "prettier  --parser typescript --single-quote",
-    "prettier:write": "npm run prettier -- --write \"src/**/*.ts\"",
     "write:specs": "mocha -r ts-node/register -r source-map-support/register src/**/*.tests.ts --reporter=markdown > spec.md"
   },
   "lint-staged": {

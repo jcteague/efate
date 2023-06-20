@@ -1,4 +1,4 @@
-import { faker, Faker } from '@faker-js/faker';
+import { Faker,faker } from '@faker-js/faker';
 import { Field } from 'efate';
 
 export interface FakerExtension {

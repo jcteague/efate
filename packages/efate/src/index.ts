@@ -1,7 +1,7 @@
-import Fixture from './fixture';
-import { BuilderReturnFunction } from './types';
 import Field from './field';
-import { defineFixtureFactory, defineFixture, createFixtureFactory } from './fixture-factory';
+import Fixture from './fixture';
+import { createFixtureFactory, defineFixture, defineFixtureFactory } from './fixture-factory';
+import { BuilderReturnFunction } from './types';
 
 export default Fixture;
-export { BuilderReturnFunction, Field, createFixtureFactory, defineFixtureFactory, defineFixture };
+export { BuilderReturnFunction, createFixtureFactory, defineFixture, defineFixtureFactory, Field };

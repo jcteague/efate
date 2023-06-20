@@ -1,12 +1,56 @@
 {
-  "name": "root",
+  "name": "efate",
+  "description": "A typesafe fixture builder.",
   "private": true,
+  "keywords": [
+    "testing",
+    "fixtures",
+    "mocks",
+    "stubs",
+    "typescript",
+    "fixture builder",
+    "fixture generator"
+  ],
+  "scripts": {
+    "bootstrap": "lerna exec npm install",
+    "compile": "lerna run compile --sort",
+    "test": "lerna run test --parallel",
+    "lint": "eslint packages/**/*.ts",
+    "lint:fix": "eslint packages/**/*.ts --fix",
+    "clean": "lerna run clean --parallel",
+    "prettier": "prettier --write packages/**/*"
+  },
+  "author": {
+    "name": "John Teague",
+    "url": "https://github.com/jcteague"
+  },
+  "license": "MIT",
+  "repository": "jcteague/efate",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=12"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "dependencies": {
+    "efate": "file:packages/efate",
+    "efate-uuid": "file:packages/efate-uuid"
+  },
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",
     "@types/sinon": "^5.0.1",
     "@types/sinon-chai": "^3.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
     "chai": "^4.1.2",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
     "husky": "^0.14.3",
     "lerna": "^6.1.0",
     "lint-staged": "^7.2.2",
@@ -17,8 +61,6 @@
     "sinon-chai": "^3.2.0",
     "source-map-support": "^0.5.9",
     "ts-node": "^10.7.0",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
     "type-fest": "3.3",
     "typescript": "^4.7.4"
   },
@@ -28,11 +70,29 @@
     "printWidth": 100,
     "bracketSpacing": true
   },
-  "dependencies": {
-    "efate": "file:packages/efate",
-    "efate-uuid": "file:packages/efate-uuid"
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "simple-import-sort"
+    ],
+    "extends": [
+      "prettier",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/eslint-recommended"
+    ],
+    "rules": {
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error"
+    },
+    "parserOptions": {
+      "sourceType": "module",
+      "project": "./tsconfig.json"
+    }
   },
-  "engines": {
-    "node": ">=12"
-  }
+  "eslintIgnore": [
+    "**/dist/**",
+    "**/node_modules/**"
+  ]
 }

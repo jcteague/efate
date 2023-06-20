@@ -1,3 +1,17 @@
+import Field from '../field';
+import Fixture from '../fixture';
+import { BuilderReturnFunction, DateBuilderOptions, LoremIpsumOptions } from '../types';
+import asArrayBuilder, { ArrayBuilderOptions } from './array-field-builder';
+import ArrayOfFixtureBuilder, { ArrayOfFixtureBuilderOptions } from './array-of-fixture-builder';
+import arrayOfFixtureBuilder from './array-of-fixture-builder';
+import asBooleanBuilder from './boolean-field-builder';
+import asDateBuilder from './date-field-builder';
+import asEmailBuilder from './email-field-builder';
+import fromFixtureBuilder from './from-fixture-field-builder';
+import buildFromFunction from './function-field-builder';
+import loremIpsumBuilder from './lorem-ipsum-field-builder';
+import asNumberBuilder from './number-field-builder';
+import pickFromFieldBuilder from './pick-from-field-builder';
 import {
   asStringBuilder,
   firstNameBuilder,
@@ -6,20 +20,6 @@ import {
   withConstantBuilder,
   withValueBuilder,
 } from './string-field-builder';
-import asBooleanBuilder from './boolean-field-builder';
-import Field from '../field';
-import pickFromFieldBuilder from './pick-from-field-builder';
-import asNumberBuilder from './number-field-builder';
-import { BuilderReturnFunction, DateBuilderOptions, LoremIpsumOptions } from '../types';
-import asDateBuilder from './date-field-builder';
-import Fixture from '../fixture';
-import fromFixtureBuilder from './from-fixture-field-builder';
-import asArrayBuilder, { ArrayBuilderOptions } from './array-field-builder';
-import asEmailBuilder from './email-field-builder';
-import buildFromFunction from './function-field-builder';
-import ArrayOfFixtureBuilder, { ArrayOfFixtureBuilderOptions } from './array-of-fixture-builder';
-import arrayOfFixtureBuilder from './array-of-fixture-builder';
-import loremIpsumBuilder from './lorem-ipsum-field-builder';
 
 export interface FieldTypeSelector {
   asBoolean: () => void;
