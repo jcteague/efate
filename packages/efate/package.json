@@ -43,5 +43,9 @@
   "files": [
     "dist/**/*"
   ],
-  "gitHead": "bb535dacbdb45907de49b394116760d5d24d04d4"
+  "gitHead": "bb535dacbdb45907de49b394116760d5d24d04d4",
+  "devDependencies": {
+    "@types/debug": "^4.1.8",
+    "@types/lodash.merge": "^4.6.7"
+  }
 }

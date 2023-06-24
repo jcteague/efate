@@ -1,70 +1,71 @@
-import Field from './field';
+import debugGenerator from 'debug';
 import Fixture from './fixture';
 import { FieldTypeSelector, fieldTypeGenerators } from './property-builders/field-generator';
-import { FieldGeneratorFunc } from './types';
-import * as debugGenerator from 'debug';
+import { BuilderGeneratorFunction } from './types';
+
 const debug = debugGenerator('efate:fixture-factory');
 
-interface ExtendsFixture {
+type FixtureFactoryExtensions = Record<string, (...args: any) => BuilderGeneratorFunction<any>>;
+
+type ExtendedFixture = undefined | Fixture<any>;
+
+type ExtendsFixture = {
   extends: (fixture: Fixture<any>) => void;
-}
-type MappedFieldTypeSelector<T, TFieldTypeSelector> = {
+};
+
+type DefineFieldsParam<T, TFieldTypeSelector> = ExtendsFixture & {
   [P in keyof T]: TFieldTypeSelector;
 };
-type DefineFieldsActionParam<T, TFieldTypeSelector> = MappedFieldTypeSelector<
-  T,
-  TFieldTypeSelector
-> &
-  ExtendsFixture;
 
-export type DefineFieldsAction<T, TFieldTypeSelector> = (
-  t: DefineFieldsActionParam<T, TFieldTypeSelector>,
-) => void;
-export function createFixtureFactory<TFieldSelectorExtension>(...extensions) {
-  // tslint:disable-next-line:no-console
+type DefineFields<T, TFieldTypeSelector> = (t: DefineFieldsParam<T, TFieldTypeSelector>) => void;
+
+export function defineFixtureFactory<TFieldSelectorExtension>(
+  ...extensions: FixtureFactoryExtensions[]
+) {
+  return <T>(defineFields: DefineFields<T, FieldTypeSelector & TFieldSelectorExtension>) => {
+    const builders = Object.assign({}, fieldTypeGenerators, ...extensions);
+    const buildersList: BuilderGeneratorFunction<T>[] = [];
+
+    let extendedFixture: ExtendedFixture;
+
+    const proxy = new Proxy(
+      {} as DefineFieldsParam<T, FieldTypeSelector & TFieldSelectorExtension>,
+      {
+        get(_, property) {
+          if (property === 'extends') {
+            debug('extending another fixture');
+            return (fixture: ExtendedFixture) => {
+              extendedFixture = fixture;
+            };
+          }
+
+          return Object.keys(builders).reduce((obj, key) => {
+            const addBuilder = (...args: unknown[]) => {
+              buildersList.push(builders[key](property, args));
+            };
+
+            obj[key] = addBuilder;
+            return obj;
+          }, {});
+        },
+      },
+    );
+
+    defineFields(proxy);
+
+    return new Fixture<T>(buildersList, extendedFixture);
+  };
+}
+
+export function createFixtureFactory<TFieldSelectorExtension>(
+  ...extensions: FixtureFactoryExtensions[]
+) {
   console.warn(
-    'Deprecation Notice! createFixtureFactory has been renamed to defineFixtureFactory.  createFixtureFactory function will be removed in future major versions',
+    'Deprecation Notice! createFixtureFactory has been renamed to defineFixtureFactory. createFixtureFactory function will be removed in future major versions',
   );
   return defineFixtureFactory<TFieldSelectorExtension>(...extensions);
 }
 
-export function defineFixtureFactory<TFieldSelectorExtension>(...extensions) {
-  function createFixture<T>(
-    defineFields: DefineFieldsAction<T, FieldTypeSelector & TFieldSelectorExtension>,
-  ) {
-    const extension = Object.assign({}, ...extensions);
-
-    const builders = { ...fieldTypeGenerators, ...extension };
-
-    const buildersList: FieldGeneratorFunc[] = [];
-    let extendedFixture;
-    const proxy = new Proxy(
-      {},
-      {
-        get(target, property) {
-          if (property === 'extends') {
-            debug('extending another fixture');
-            return (fixture: Fixture<any>) => {
-              extendedFixture = fixture;
-            };
-          }
-          const wrappedBuilders = Object.keys(builders).reduce((obj, key) => {
-            obj[key] = (...args) => {
-              buildersList.push(builders[key](property, args));
-            };
-            return obj;
-          }, {});
-          return wrappedBuilders;
-        },
-      },
-    );
-    defineFields(
-      proxy as { [P in keyof T]: FieldTypeSelector & TFieldSelectorExtension } & ExtendsFixture,
-    );
-    return new Fixture<T>(buildersList, extendedFixture);
-  }
-  return createFixture;
-}
-export function defineFixture<T>(defineFields: DefineFieldsAction<T, FieldTypeSelector>) {
+export function defineFixture<T>(defineFields: DefineFields<T, FieldTypeSelector>) {
   return defineFixtureFactory()(defineFields);
 }
