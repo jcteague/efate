@@ -1,5 +1,6 @@
-import Field from './field';
 import { expect } from 'chai';
+
+import Field from './field';
 import { defineFixtureFactory } from './fixture-factory';
 
 interface FixtureExtension {

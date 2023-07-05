@@ -29,10 +29,10 @@ const fullNameBuilder = (fieldName: string) => () =>
   new Field(fieldName, `${getRandomElement(firstNames)} ${getRandomElement(lastNames)}`);
 
 export {
-  withValueBuilder,
-  withConstantBuilder,
-  firstNameBuilder,
-  lastNameBuilder,
-  fullNameBuilder,
   asStringBuilder,
+  firstNameBuilder,
+  fullNameBuilder,
+  lastNameBuilder,
+  withConstantBuilder,
+  withValueBuilder,
 };

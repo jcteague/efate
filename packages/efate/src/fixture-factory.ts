@@ -1,6 +1,7 @@
 import debugGenerator from 'debug';
+
 import Fixture from './fixture';
-import { FieldTypeSelector, fieldTypeGenerators } from './property-builders/field-generator';
+import { fieldTypeGenerators, FieldTypeSelector } from './property-builders/field-generator';
 import { BuilderGeneratorFunction } from './types';
 
 const debug = debugGenerator('efate:fixture-factory');
