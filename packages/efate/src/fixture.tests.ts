@@ -86,6 +86,7 @@ describe('fixture.specs', () => {
     });
     it('should call create function once', () => {
       const builderFn = sinon.spy();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const fixture = userFixture.create(builderFn);
       expect(builderFn).to.be.calledOnce;
     });

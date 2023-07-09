@@ -1,5 +1,8 @@
 import Field from '../field';
-import { DateBuilderOptions } from '../types';
+
+export type DateBuilderOptions = {
+  incrementDay: boolean;
+};
 
 const defaultOptions = {
   incrementDay: false,

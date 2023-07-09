@@ -1,24 +1,17 @@
 import debugGenerator from 'debug';
 import merge from 'lodash.merge';
-import type { PartialDeep } from 'type-fest';
 
-import { BuilderGeneratorFunction } from './types';
+import { FixtureFieldBuilder, FixtureOverrider, FixturesArrayBuilder } from './types';
 import { isFunction } from './utils';
 
 const debug = debugGenerator('efate:fixture-factory');
 
-type OverridesFn<T> = (fixture: T) => void;
-type Overrides<T> = PartialDeep<T> | OverridesFn<T>;
-
-type CreateArrayParameterFn<T> = (index: number, create: (overrides?: Overrides<T>) => T) => T;
-type CreateArrayParameter<T> = PartialDeep<T> | Array<PartialDeep<T>> | CreateArrayParameterFn<T>;
-
 export default class Fixture<T> {
   private omittedFields: Set<keyof T> = new Set();
-  private builders: BuilderGeneratorFunction<T>[] = [];
+  private builders: FixtureFieldBuilder<T>[] = [];
   private instanceCount: number;
 
-  constructor(builders: BuilderGeneratorFunction<T>[], extendFixture?: Fixture<T>) {
+  constructor(builders: FixtureFieldBuilder<T>[], extendFixture?: Fixture<T>) {
     this.instanceCount = 1;
     this.builders = builders;
 
@@ -27,7 +20,7 @@ export default class Fixture<T> {
     }
   }
 
-  public create(overrides?: Overrides<T>): T {
+  public create(overrides?: FixtureOverrider<T>): T {
     const fixture = {} as T;
 
     this.builders.forEach((builder) => {
@@ -57,7 +50,7 @@ export default class Fixture<T> {
     return fixture;
   }
 
-  public createArrayWith(length: number, params?: CreateArrayParameter<T>): T[] {
+  public createArrayWith(length: number, params?: FixturesArrayBuilder<T>): T[] {
     const results: T[] = [];
 
     for (let i = 0; i < length; i++) {
