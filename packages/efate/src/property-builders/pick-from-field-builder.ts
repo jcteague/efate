@@ -1,8 +1,8 @@
 import Field from '../field';
 
 const pickFromBuilder =
-  (fieldName: string, [options]: [any[]]) =>
-  (increment: number) => {
+  (fieldName: string, [options]: [unknown[]]) =>
+  () => {
     if (!options || options.length === 0) {
       throw new Error('missing or empty options array');
     }

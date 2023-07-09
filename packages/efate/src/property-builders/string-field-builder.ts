@@ -1,5 +1,5 @@
+import { FIRST_NAMES, LAST_NAMES } from '../constants';
 import Field from '../field';
-import { firstNames, lastNames } from './names';
 
 const asStringBuilder = (fieldName: string) => (increment: number) =>
   new Field(fieldName, `${fieldName}${increment}`);
@@ -14,19 +14,19 @@ const withConstantBuilder =
   () =>
     new Field(fieldName, constantValue);
 
-const getRandomElement = (list: any[]) => {
+const getRandomElement = (list: string[]) => {
   const i = Math.floor(Math.random() * list.length);
   return list[i];
 };
 
 const firstNameBuilder = (fieldName: string) => () =>
-  new Field(fieldName, getRandomElement(firstNames));
+  new Field(fieldName, getRandomElement(FIRST_NAMES));
 
 const lastNameBuilder = (fieldName: string) => () =>
-  new Field(fieldName, getRandomElement(lastNames));
+  new Field(fieldName, getRandomElement(LAST_NAMES));
 
 const fullNameBuilder = (fieldName: string) => () =>
-  new Field(fieldName, `${getRandomElement(firstNames)} ${getRandomElement(lastNames)}`);
+  new Field(fieldName, `${getRandomElement(FIRST_NAMES)} ${getRandomElement(LAST_NAMES)}`);
 
 export {
   asStringBuilder,

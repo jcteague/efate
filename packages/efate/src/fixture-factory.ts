@@ -1,56 +1,37 @@
 import debugGenerator from 'debug';
 
 import Fixture from './fixture';
-import { fieldTypeGenerators, FieldTypeSelector } from './property-builders/field-generator';
-import { BuilderGeneratorFunction } from './types';
+import { FieldTypeBuilder, fieldTypeBuilder } from './property-builders/field-generator';
+import { DefineFixture, DefineFixtureFields, FixtureExtension, FixtureFieldBuilder } from './types';
 
 const debug = debugGenerator('efate:fixture-factory');
 
-type FixtureFactoryExtensions = Record<string, (...args: any) => BuilderGeneratorFunction<any>>;
+export function defineFixtureFactory<TFieldExtension>(...extensions: FixtureExtension[]) {
+  return <T>(defineFields: DefineFixture<T, FieldTypeBuilder & TFieldExtension>) => {
+    const builders = Object.assign({}, fieldTypeBuilder, ...extensions);
+    const buildersList: FixtureFieldBuilder<T>[] = [];
 
-type ExtendedFixture = undefined | Fixture<any>;
+    let extendedFixture: Fixture<T> | undefined;
 
-type ExtendsFixture = {
-  extends: (fixture: Fixture<any>) => void;
-};
+    const proxy = new Proxy({} as DefineFixtureFields<T, FieldTypeBuilder & TFieldExtension>, {
+      get(_, property) {
+        if (property === 'extends') {
+          debug('extending another fixture');
+          return (fixture: Fixture<T>) => {
+            extendedFixture = fixture;
+          };
+        }
 
-type DefineFieldsParam<T, TFieldTypeSelector> = ExtendsFixture & {
-  [P in keyof T]: TFieldTypeSelector;
-};
+        return Object.keys(builders).reduce((obj, key) => {
+          const addBuilder = (...args: unknown[]) => {
+            buildersList.push(builders[key](property, args));
+          };
 
-type DefineFields<T, TFieldTypeSelector> = (t: DefineFieldsParam<T, TFieldTypeSelector>) => void;
-
-export function defineFixtureFactory<TFieldSelectorExtension>(
-  ...extensions: FixtureFactoryExtensions[]
-) {
-  return <T>(defineFields: DefineFields<T, FieldTypeSelector & TFieldSelectorExtension>) => {
-    const builders = Object.assign({}, fieldTypeGenerators, ...extensions);
-    const buildersList: BuilderGeneratorFunction<T>[] = [];
-
-    let extendedFixture: ExtendedFixture;
-
-    const proxy = new Proxy(
-      {} as DefineFieldsParam<T, FieldTypeSelector & TFieldSelectorExtension>,
-      {
-        get(_, property) {
-          if (property === 'extends') {
-            debug('extending another fixture');
-            return (fixture: ExtendedFixture) => {
-              extendedFixture = fixture;
-            };
-          }
-
-          return Object.keys(builders).reduce((obj, key) => {
-            const addBuilder = (...args: unknown[]) => {
-              buildersList.push(builders[key](property, args));
-            };
-
-            obj[key] = addBuilder;
-            return obj;
-          }, {});
-        },
+          obj[key] = addBuilder;
+          return obj;
+        }, {});
       },
-    );
+    });
 
     defineFields(proxy);
 
@@ -58,15 +39,13 @@ export function defineFixtureFactory<TFieldSelectorExtension>(
   };
 }
 
-export function createFixtureFactory<TFieldSelectorExtension>(
-  ...extensions: FixtureFactoryExtensions[]
-) {
+export function createFixtureFactory<TFieldSelectorExtension>(...extensions: FixtureExtension[]) {
   console.warn(
     'Deprecation Notice! createFixtureFactory has been renamed to defineFixtureFactory. createFixtureFactory function will be removed in future major versions',
   );
   return defineFixtureFactory<TFieldSelectorExtension>(...extensions);
 }
 
-export function defineFixture<T>(defineFields: DefineFields<T, FieldTypeSelector>) {
+export function defineFixture<T>(defineFields: DefineFixture<T, FieldTypeBuilder>) {
   return defineFixtureFactory()(defineFields);
 }

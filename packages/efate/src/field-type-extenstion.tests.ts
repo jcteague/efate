@@ -16,7 +16,7 @@ const customEmailExtension = {
 
 const ssnExtension = {
   asSSN: (fieldName: string, [startValue]) => {
-    return (increment) => {
+    return (increment: number) => {
       return new Field(fieldName, `123-45-${1000 * startValue + increment}`);
     };
   },
