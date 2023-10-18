@@ -176,27 +176,37 @@ const userFixture = createFixture<User>(t => {
 ### Extending Fixtures
 If you have a type that extends another type, or you have a common set of fields used in multiple objects, you can extend a fixture so you can reuse an existing fixture definition to add fields to another fixture.
 
+You can extend from multiple fixtures as well.
+
 ```typescript
 import {defineFixture} from "efate";
 
 interface User {
   name: string;
 }
+interface UserSession {
+  sessionId: string
+}
 
-interface LoggedInUser extends User {
+interface LoggedInUser extends User, UserSession {
   lastLoginDate: Date
 }
 
 const UserFixture = defineFixture<User>(t => {
   t.name.asString();
 })
+const UserSessionFixture = defineFixture<UserSession>(t => {
+  t.sessionId.asString();
+})
 //use UserFixture to add fields to LoggedInuser fixture
 const LoggedInUserFixture = defineFixture<LoggedInUser>(t =>{
-  t.extend(UserFixture);
+  // extend will accept mutliple fixtures
+  t.extend(UserFixture, UserSessionFixture);
   t.lastLoginDate.asDate();
 })
 
 ```
+
 
 ### Provided Type Generators
 All of the type generators behavior is described in the generated [Spec file](packages/efate/spec.md).

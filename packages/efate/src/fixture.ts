@@ -18,12 +18,13 @@ export default class Fixture<T> {
   private builders: BuilderGeneratorFunction<T>[] = [];
   private instanceCount: number;
 
-  constructor(builders: BuilderGeneratorFunction<T>[], extendFixture?: Fixture<T>) {
+  constructor(builders: BuilderGeneratorFunction<T>[], extendFixture: Array<Fixture<T>>) {
     this.instanceCount = 1;
     this.builders = builders;
+    
 
-    if (extendFixture) {
-      this.builders.push(...extendFixture.builders);
+    if (extendFixture.length > 0) {
+      this.builders.push(...extendFixture.map(fixture => fixture.builders).flat());
     }
   }
 
