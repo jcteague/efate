@@ -36,7 +36,6 @@ export function defineFixtureFactory<TFieldSelectorExtension>(
           if (property === 'extends') {
             debug('extending another fixture');
             return (...fixture: ExtendedFixture) => {
-              console.log('extending fixture with', fixture)
               extendedFixture = fixture;
             };
           }
