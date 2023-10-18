@@ -136,7 +136,37 @@ describe('fixture.specs', () => {
       expect(extendedObj).to.have.property('b');
       expect(extendedObj).to.have.property('c');
     });
+
+    it('should handle extending multiple types', () => {
+      interface Parent {
+        a: string;
+        b: string;
+      }
+      interface SecondParent {
+        c: string;
+      }
+      interface Child extends Parent {
+        d: string;
+      }
+      const ParentFixture = defineFixture<Parent>((t) => {
+        t.a.asString();
+        t.b.asString();
+      });
+      const SecondParentFixture = defineFixture<SecondParent>((t) => {
+        t.c.asString();
+      });
+      const ChildFixture = defineFixture<Child>((t) => {
+        t.extends(ParentFixture, SecondParentFixture);
+        t.d.asString();
+      });
+      const extendedObj = ChildFixture.create();
+      expect(extendedObj).to.have.property('a');
+      expect(extendedObj).to.have.property('b');
+      expect(extendedObj).to.have.property('c');
+      expect(extendedObj).to.have.property('c');
+
   });
+});
 
   describe('create array of fixture', () => {
     it('should make an array of the object of the provided length', () => {

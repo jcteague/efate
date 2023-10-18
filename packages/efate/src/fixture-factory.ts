@@ -8,10 +8,10 @@ const debug = debugGenerator('efate:fixture-factory');
 
 type FixtureFactoryExtensions = Record<string, (...args: any) => BuilderGeneratorFunction<any>>;
 
-type ExtendedFixture = undefined | Fixture<any>;
+type ExtendedFixture = Array<Fixture<any>>;
 
 type ExtendsFixture = {
-  extends: (fixture: Fixture<any>) => void;
+  extends: (...fixture: Array<Fixture<any>>) => void;
 };
 
 type DefineFieldsParam<T, TFieldTypeSelector> = ExtendsFixture & {
@@ -27,7 +27,7 @@ export function defineFixtureFactory<TFieldSelectorExtension>(
     const builders = Object.assign({}, fieldTypeGenerators, ...extensions);
     const buildersList: BuilderGeneratorFunction<T>[] = [];
 
-    let extendedFixture: ExtendedFixture;
+    let extendedFixture: ExtendedFixture = [];
 
     const proxy = new Proxy(
       {} as DefineFieldsParam<T, FieldTypeSelector & TFieldSelectorExtension>,
@@ -35,7 +35,7 @@ export function defineFixtureFactory<TFieldSelectorExtension>(
         get(_, property) {
           if (property === 'extends') {
             debug('extending another fixture');
-            return (fixture: ExtendedFixture) => {
+            return (...fixture: ExtendedFixture) => {
               extendedFixture = fixture;
             };
           }
