@@ -1,17 +1,23 @@
 import debugGenerator from 'debug';
-import merge from 'lodash.merge';
+import mergeWith from 'lodash.mergewith';
 import type { PartialDeep } from 'type-fest';
 
 import { BuilderGeneratorFunction } from './types';
 import { isFunction } from './utils';
 
-const debug = debugGenerator('efate:fixture-factory');
+const debug = debugGenerator('efate:fixture');
 
 type OverridesFn<T> = (fixture: T) => void;
 type Overrides<T> = PartialDeep<T> | OverridesFn<T>;
 
 type CreateArrayParameterFn<T> = (index: number, create: (overrides?: Overrides<T>) => T) => T;
 type CreateArrayParameter<T> = PartialDeep<T> | Array<PartialDeep<T>> | CreateArrayParameterFn<T>;
+
+const mergeOverrides = (objValue: any, newValue: any) => {
+  if (Array.isArray(objValue)) {
+    return newValue;
+  }
+};
 
 export default class Fixture<T> {
   private omittedFields: Set<keyof T> = new Set();
@@ -50,9 +56,10 @@ export default class Fixture<T> {
 
     this.omittedFields.clear();
     this.instanceCount++;
-
+    debug('fixture: %o, overrides: %o', fixture, overrides)
     if (overrides) {
-      isFunction(overrides) ? overrides(fixture) : merge(fixture, overrides);
+      isFunction(overrides) ? overrides(fixture) : mergeWith(fixture, overrides, mergeOverrides);
+      debug('fixture after applying overrides: %o',  fixture)
     }
 
     return fixture;

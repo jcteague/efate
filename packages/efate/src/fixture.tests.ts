@@ -112,6 +112,26 @@ describe('fixture.specs', () => {
       expect(fixture.account.passWord).to.contain('passWord');
       expect(fixture.account.userName).to.equal('user name overridden');
     });
+    it('should allow users to override array of fixtures', () => {
+      interface InnerObj {
+        a: string;
+      }
+      interface OuterObj {
+        x:string;
+        arrayOfInner: InnerObj[];
+      }
+      const innerFixture = defineFixture<InnerObj>((t) => {
+        t.a.asString();
+      });
+      const outerFixture = defineFixture<OuterObj>((t) => {
+        t.x.asString();
+        t.arrayOfInner.arrayOfFixture({ fixture: innerFixture });
+      });
+      const fixture = outerFixture.create({
+        arrayOfInner: innerFixture.createArrayWith(1),
+      });
+      expect(fixture.arrayOfInner).to.have.lengthOf(1);
+    });
   });
 
   describe('extends', () => {
