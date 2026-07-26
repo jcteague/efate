@@ -34,7 +34,7 @@
   "homepage": "https://github.com/jcteague/efate#readme",
   "dependencies": {
     "efate": "file:../efate",
-    "uuid": "^3.3.3"
+    "uuid": "^14.0.0"
   },
   "gitHead": "bb535dacbdb45907de49b394116760d5d24d04d4"
 }
